@@ -77,8 +77,8 @@ export default function AppNavbar() {
 
                         {isLoggedIn && (
                             <>
-                                <Link href="/dashboard/add-lesson" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
-                                    Add Lesson
+                                <Link href="/dashboard/post-lesson" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
+                                    Post Lesson
                                 </Link>
                                 <Link href="/dashboard/my-lessons" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
                                     My Lessons
