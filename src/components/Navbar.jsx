@@ -10,14 +10,30 @@ import {
     DropdownItem,
     Avatar
 } from "@heroui/react";
+import { authClient } from "@/lib/auth-client";
+import Image from "next/image";
 
-export default function AppNavbar({ isLoggedIn = false, userPlan = "Free", user = null }) {
+
+export default function AppNavbar() {
+
     const [isOpen, setIsOpen] = useState(false);
 
-    const currentUser = user || {
-        name: "John Doe",
-        email: "john@example.com",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d"
+
+
+    const { data: session, isPending } = authClient.useSession();
+    const user = session?.user
+    const isLoggedIn = !!session;
+    const userPlan = session?.user?.plan || "Free";
+
+    const currentUser = user
+    const handleLogout = async () => {
+        await authClient.signOut({
+            fetchOptions: {
+                onSuccess: () => {
+                    window.location.href = "/auth/sign-in";
+                }
+            }
+        });
     };
 
     return (
@@ -25,7 +41,7 @@ export default function AppNavbar({ isLoggedIn = false, userPlan = "Free", user 
         <nav className="sticky top-0 z-50 w-full border-b border-white/[0.06] bg-gradient-to-r from-[#0a0b10]/90 via-[#11131c]/85 to-[#0a0b10]/90 backdrop-blur-xl backdrop-saturate-150 shadow-[0_4px_30px_rgba(0,0,0,0.4)]">
             {/* কালারটিকে আরও প্রিমিয়াম লুক দিতে একটি মায়াবী ব্যাকগ্রাউন্ড রিফ্লেকশন লেয়ার */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-500/[0.04] via-transparent to-transparent pointer-events-none" />
-            
+
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
                 <div className="flex h-16 items-center justify-between">
 
@@ -97,34 +113,37 @@ export default function AppNavbar({ isLoggedIn = false, userPlan = "Free", user 
                                 </Button>
                             </>
                         ) : (
-                            <Dropdown placement="bottom-end" className="bg-[#11131c] border border-white/[0.08] text-white">
-                                <DropdownTrigger>
-                                    <Avatar
-                                        isBordered
-                                        as="button"
-                                        className="transition-transform cursor-pointer border-indigo-500"
-                                        color="primary"
-                                        name={currentUser.name}
-                                        size="sm"
-                                        src={currentUser.avatar}
-                                    />
-                                </DropdownTrigger>
-                                <DropdownMenu aria-label="Profile Actions" variant="flat">
-                                    <DropdownItem key="profile_header" className="h-14 gap-2 opacity-100 cursor-default">
-                                        <p className="font-semibold text-xs text-slate-400">Signed in as</p>
-                                        <p className="font-bold text-white">{currentUser.name}</p>
-                                    </DropdownItem>
-                                    <DropdownItem key="profile" href="/profile" className="text-slate-200 hover:text-white">
-                                        Profile
-                                    </DropdownItem>
-                                    <DropdownItem key="dashboard" href="/dashboard" className="text-slate-200 hover:text-white">
-                                        Dashboard
-                                    </DropdownItem>
-                                    <DropdownItem key="logout" color="danger" className="text-danger">
-                                        Log Out
-                                    </DropdownItem>
-                                </DropdownMenu>
-                            </Dropdown>
+                            <div>
+
+
+                                {/* সাধারণ লগআউট বাটন */}
+                                <Button
+                                    size="sm"
+                                    color="danger"
+                                    variant="flat"
+                                    className="font-semibold   text-danger rounded-xl my-auto"
+                                    onClick={handleLogout}
+                                >
+                                    Log Out
+                                </Button>
+                                <Link href="/profile" className="transition-transform active:scale-95">
+                                    {
+                                        currentUser?.image?.startsWith("http") ? (
+                                            <Image
+                                                src={currentUser.image}
+                                                width={35}
+                                                height={35}
+                                                alt={currentUser.name}
+                                                className="rounded-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white shadow-[0_0_10px_rgba(79,70,229,0.3)]">
+                                                {currentUser?.name ? currentUser.name[0].toUpperCase() : "U"}
+                                            </div>
+                                        )
+                                    }
+                                </Link>
+                            </div>
                         )}
 
                         {/* Mobile Hamburger Icon */}

@@ -3,7 +3,7 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import Link from 'next/link';
-// import { authClient } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth-client';
 import { FcGoogle } from 'react-icons/fc';
 import { HiOutlineMail, HiOutlineLockClosed } from 'react-icons/hi';
 import { toast } from "react-hot-toast"; // assuming you are using react-hot-toast
@@ -12,39 +12,48 @@ function LoginPage() {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const handleLogin = async (data) => {
-        // const { email, password } = data;
-        // const { data: res, error } = await authClient.signIn.email({
-        //     email: email,
-        //     password: password,
-        //     rememberMe: true,
-        //     callbackURL: "/",
-        // });
+        const { email, password } = data;
+        const { data: res, error } = await authClient.signIn.email({
+            email: email,
+            password: password,
+            rememberMe: true,
+            callbackURL: "/",
+        });
 
-        // if (error) {
-        //     toast.error(error.message || "Invalid email or password.", {
-        //         position: "top-right",
-        //         duration: 4000,
-        //         style: {
-        //             borderLeft: "5px solid #EF4444",
-        //             padding: "16px",
-        //             color: "#FFFFFF", 
-        //             background: "#11131c", 
-        //             borderRadius: "12px",
-        //             boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3)",
-        //             fontSize: "14px",
-        //             fontWeight: "500"
-        //         },
-        //         iconTheme: {
-        //             primary: "#EF4444",
-        //             secondary: "#FFFFFF",
-        //         },
-        //     });
-        //     return;
-        // }
+        if (error) {
+            toast.error(error.message || "Invalid email or password.", {
+                position: "top-right",
+                duration: 4000,
+                style: {
+                    borderLeft: "5px solid #EF4444",
+                    padding: "16px",
+                    color: "#FFFFFF",
+                    background: "#11131c",
+                    borderRadius: "12px",
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3)",
+                    fontSize: "14px",
+                    fontWeight: "500"
+                },
+                iconTheme: {
+                    primary: "#EF4444",
+                    secondary: "#FFFFFF",
+                },
+            });
+            return;
+        }
 
-        // if (res) {
-        //     toast.success("SignIn Successfully");
-        // }
+        // 'res' এর বদলে 'error' না থাকলে সরাসরি সাকসেস দেখাবে
+        toast.success("Signed In Successfully!", {
+            position: "top-right",
+            duration: 3000,
+            style: {
+                borderLeft: "5px solid #10B981", // সাকসেসের জন্য গ্রিন বর্ডার
+                padding: "16px",
+                color: "#FFFFFF",
+                background: "#11131c",
+                borderRadius: "12px",
+            }
+        });
     };
 
     const handleGoogleSingIn = async () => {
@@ -56,7 +65,7 @@ function LoginPage() {
     return (
         // ১. মেইন ব্যাকগ্রাউন্ড: আল্ট্রা-ডার্ক সাইবারমেটালিক থিম উইথ অ্যাম্বিয়েন্ট আভা
         <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-[#0a0b10] via-[#0f111a] to-[#050608] p-4 md:p-8 relative overflow-hidden">
-            
+
             {/* ব্যাকগ্রাউন্ড রিফ্লেকশন ইফেক্টস */}
             <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -82,7 +91,7 @@ function LoginPage() {
 
                 {/* ইনপুট ফর্ম */}
                 <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
-                    
+
                     {/* ইমেইল ইনপুট */}
                     <div className="flex flex-col gap-1.5">
                         <label className="text-xs font-bold text-slate-400 uppercase tracking-wider pl-1">Email Address</label>
