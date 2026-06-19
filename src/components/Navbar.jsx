@@ -85,7 +85,7 @@ export default function AppNavbar({ isLoggedIn = false, userPlan = "Free", user 
                     <div className="flex items-center gap-4">
                         {!isLoggedIn ? (
                             <>
-                                <Link href="/login" className="hidden sm:inline-block text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
+                                <Link href="/auth/sign-in" className="hidden sm:inline-block text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
                                     Sign In
                                 </Link>
                                 <Button
@@ -160,7 +160,7 @@ export default function AppNavbar({ isLoggedIn = false, userPlan = "Free", user 
                         <Link href="/pricing" className="text-base font-semibold text-warning py-2">Upgrade ⚡</Link>
                     )}
                     {!isLoggedIn && (
-                        <Link href="/login" className="text-base font-medium py-2 text-slate-200 sm:hidden">Sign In</Link>
+                        <Link href="/auth/sign-in" className="text-base font-medium py-2 text-slate-200 sm:hidden">Sign In</Link>
                     )}
                 </div>
             )}
