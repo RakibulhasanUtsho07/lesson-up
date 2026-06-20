@@ -4,25 +4,51 @@ import React from "react";
 import { 
   Bars, 
   Bell, 
+  BookOpen, 
   Envelope, 
   Gear, 
+  Heart, 
   House, 
   Magnifier, 
   Person 
 } from "@gravity-ui/icons";
 import { Drawer, Button } from "@heroui/react";
 import Link from "next/link";
+import { BiPlusCircle } from "react-icons/bi";
+import { LuBookOpenCheck, LuLayoutDashboard } from "react-icons/lu";
+import { BsPeople } from "react-icons/bs";
+import { FiAlertTriangle } from "react-icons/fi";
+import { RiShieldUserFill } from "react-icons/ri";
+import { authClient } from "@/lib/auth-client";
 
 export default function Navigation() {
+   const { data: session, isPending } = authClient.useSession();
+      const user = session?.user
   // ড্যাশবোর্ডের রাউট লিংকসহ আইটেম লিস্ট
-  const navItems = [
-    { icon: House, label: "Home", link: "/home" },
-    { icon: Magnifier, label: "Search", link: "search" },
-    { icon: Bell, label: "Notifications", link: "notification" },
-    { icon: Envelope, label: "Messages", link: "messages" },
-    { icon: Person, label: "Profile", link: "profile" },
-    { icon: Gear, label: "Settings", link: "settings" },
-  ];
+  const userNavLink = [
+  { icon: House, label: "Dashboard Home", link: "/dashboard" },
+  { icon: BiPlusCircle, label: "Post Lesson", link: "post-lesson" },
+  { icon: BookOpen, label: "My Lessons", link: "my-lessons" },
+  { icon: Heart, label: "My Favorites", link: "my-favorites" },
+  { icon: Person, label: "Profile", link: "profile" },
+];
+const adminNavItems = [
+  { icon: LuLayoutDashboard, label: "Admin Home", link: "/dashboard/admin" },
+  { icon: BsPeople, label: "Manage Users", link: "/dashboard/admin/manage-users" },
+  { icon: LuBookOpenCheck, label: "Manage Lessons", link: "/dashboard/admin/manage-lessons" },
+  { icon: FiAlertTriangle, label: "Reported Lessons", link: "/dashboard/admin/reported-lessons" },
+  { icon: RiShieldUserFill, label: "Admin Profile", link: "/dashboard/admin/profile" },
+];
+// const navItems = user?.role === "user" ? userNavLink : adminNavItems
+// const navItems = {}
+// if(user?.role === "user"){
+//   navItems.push(userNavLink)
+
+// }
+// else if(user?.role ==="admin"){
+//   navItems.push(adminNavItems)
+// }
+const navItems = user?.role === "admin" ? adminNavItems : userNavLink;
 
   // লোগো কম্পোনেন্ট (উভয় জায়গায় ব্যবহারের জন্য রেডিমেড)
   const Logo = () => (
@@ -79,7 +105,7 @@ export default function Navigation() {
       </aside>
 
       {/* 📱 মোবাইল ও ট্যাবলেট ড্রয়ার: ছোট স্ক্রিনে (lg এর নিচে) এটি বাটন দিয়ে ওপেন হবে */}
-      <div className="lg:hidden fixed top-3 left-4 z-50">
+      <div className="lg:hidden fixed top-3 left-4 z-50 ">
         <Drawer>
           {/* ড্রয়ার ট্র্রিগার বাটন */}
           <Button 

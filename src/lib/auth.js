@@ -18,6 +18,11 @@ export const auth = betterAuth({
         required: false, // আপনি চাইলে এটিকে true-ও করতে পারেন
         defaultValue: "Free", // ক্লায়েন্ট থেকে ডাটা না আসলেও ডিফল্ট "Free" সেভ হবে
       },
+      role: {
+        type: "string",
+        required: false, // আপনি চাইলে এটিকে true-ও করতে পারেন
+        defaultValue: "user", // ক্লায়েন্ট থেকে ডাটা না আসলেও ডিফল্ট "Free" সেভ হবে
+      },
     },
   },
   //    user:{

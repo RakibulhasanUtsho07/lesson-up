@@ -1,18 +1,188 @@
+"use client";
 
-import AppNavbar from '@/components/Navbar'
+import React from "react";
+import { 
+  BookOpen, 
+  Bookmark, 
+  Calendar, 
+  Clock, 
+  Plus, 
+  Sparkles, 
+  TrendingUp,
+  ArrowUpRight,
+  GraduationCap
+} from "@gravity-ui/icons";
+import { FiTrendingUp } from "react-icons/fi";
 
-import React from 'react'
+export default function DashboardHomePage() {
+  // ১. স্ট্যাটিস্টিকস ডেটা (উন্নত ভিজ্যুয়াল ও কনট্রাস্ট সহ)
+  const stats = [
+    { 
+      label: "Total Lessons Created", 
+      value: "24", 
+      change: "+4 this week", 
+      icon: BookOpen, 
+      accentColor: "from-cyan-500/20 to-blue-600/5",
+      iconColor: "text-cyan-400",
+      borderColor: "group-hover:border-cyan-500/30"
+    },
+    { 
+      label: "Total Saved Lessons", 
+      value: "12", 
+      change: "2 categories", 
+      icon: Bookmark, 
+      accentColor: "from-amber-500/20 to-orange-600/5",
+      iconColor: "text-amber-400",
+      borderColor: "group-hover:border-amber-500/30"
+    },
+    { 
+      label: "Weekly Goal Progress", 
+      value: "85%", 
+      change: "On track", 
+      icon: FiTrendingUp, 
+      accentColor: "from-emerald-500/20 to-teal-600/5",
+      iconColor: "text-emerald-400",
+      borderColor: "group-hover:border-emerald-500/30"
+    },
+  ];
 
-function DashboardHomePage() {
+  // ২. রিসেন্ট লেসন ডেটা
+  const recentLessons = [
+    { title: "React Compound Components Patterns", date: "2 hours ago", category: "Web Dev" },
+    { title: "Advanced Architecture with HeroUI v3", date: "Yesterday", category: "UI/UX" },
+    { title: "Next.js App Router & Parallel Routes", date: "3 days ago", category: "Next.js" },
+  ];
+
   return (
-    <div>
-        
-        
-        
-        <h2>Hello</h2>
+    // এখানে bg-slate-950 দিয়ে মেইন কন্টেন্টের সাদা ব্যাকগ্রাউন্ডের সমস্যা দূর করা হলো
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 space-y-8 animate-fade-in">
       
-    </div>
-  )
-}
+      {/* 🌟 হেডার সেকশন: স্বাগতম বার্তা ও ইউনিক অ্যাকশন বাটন */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-900 pb-6">
+        <div>
+          <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-widest">
+            <GraduationCap className="size-4 animate-bounce" />
+            Workspace Overview
+          </div>
+          <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-500 bg-clip-text text-transparent mt-1">
+            Overview
+          </h1>
+          <p className="text-sm text-slate-400 mt-1">
+            Welcome back! Here is what's happening with your lessons today.
+          </p>
+        </div>
+        
+        {/* কুইক শর্টকাট অ্যাকশন বাটন (ইউনিক গ্রেডিয়েন্ট এবং শ্যাডো) */}
+        <button className="group flex items-center justify-center gap-2 px-5 py-3 text-sm font-bold text-slate-950 bg-gradient-to-r from-cyan-400 via-amber-400 to-orange-500 rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.15)] hover:shadow-[0_0_25px_rgba(249,115,22,0.35)] hover:scale-[1.02] transition-all duration-300 shrink-0">
+          <Plus className="size-4 stroke-[3] group-hover:rotate-90 transition-transform duration-300" />
+          Create New Lesson
+        </button>
+      </div>
 
-export default DashboardHomePage
+      {/* 📊 ৩. স্ট্যাটস কার্ডস গ্রিড */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {stats.map((stat, i) => {
+          const Icon = stat.icon;
+          return (
+            <div 
+              key={i} 
+              className={`group relative overflow-hidden rounded-2xl border border-slate-900 bg-slate-900/40 p-6 backdrop-blur-md transition-all duration-300 hover:bg-slate-900/60 hover:-translate-y-1 ${stat.borderColor}`}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-400 tracking-wider uppercase">{stat.label}</span>
+                <div className={`p-2.5 rounded-xl bg-slate-950 border border-slate-800 group-hover:scale-110 transition-transform ${stat.iconColor}`}>
+                  <Icon className="size-5" />
+                </div>
+              </div>
+              <div className="mt-4 flex items-baseline justify-between">
+                <span className="text-4xl font-black text-white tracking-tight">{stat.value}</span>
+                <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-slate-950 border border-slate-900 text-slate-400">
+                  {stat.change}
+                </span>
+              </div>
+              
+              {/* ব্যাকগ্রাউন্ড নিয়ন গ্লো ইফেক্ট */}
+              <div className={`absolute -bottom-10 -right-10 size-32 rounded-full bg-gradient-to-br ${stat.accentColor} opacity-40 blur-2xl transition-opacity group-hover:opacity-60`} />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* 🗺️ ৪. চার্ট এবং রিসেন্ট অ্যাক্টিভিটি এরিয়া */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        
+        {/* অ্যানালিটিক্স কাস্টম চার্ট (২ কলাম জুড়ে থাকবে) */}
+        <div className="lg:col-span-2 rounded-2xl border border-slate-900 bg-slate-900/20 p-6 backdrop-blur-md flex flex-col justify-between min-h-[340px]">
+          <div className="flex items-center justify-between border-b border-slate-900/60 pb-4">
+            <div className="flex items-center gap-2">
+              <Sparkles className="size-4 text-cyan-400" />
+              <h3 className="text-base font-bold text-slate-200">Weekly Reflection Trends</h3>
+            </div>
+            <span className="text-[11px] font-bold text-cyan-400 bg-cyan-500/10 px-3 py-1 rounded-full border border-cyan-500/20">
+              Active Performance
+            </span>
+          </div>
+
+          {/* স্টাইলড হাই-কনট্রাস্ট বার চার্ট */}
+          <div className="flex items-end justify-between gap-4 h-48 pt-6 px-2">
+            {[45, 75, 35, 95, 60, 45, 85].map((height, index) => (
+              <div key={index} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
+                <div className="w-full relative rounded-t-xl bg-slate-950 border border-slate-900 group-hover:border-slate-800 transition-all h-full flex items-end overflow-hidden">
+                  <div 
+                    style={{ height: `${height}%` }}
+                    className="w-full bg-gradient-to-t from-orange-500 via-amber-400 to-cyan-400 rounded-t-xl opacity-80 group-hover:opacity-100 group-hover:brightness-110 transition-all duration-300 origin-bottom"
+                  />
+                </div>
+                <span className="text-[10px] font-bold text-slate-500 group-hover:text-slate-300 uppercase tracking-wider transition-colors">
+                  {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"][index]}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ৫. রিসেন্টলি অ্যাডেড লেসন লিস্ট */}
+        <div className="rounded-2xl border border-slate-900 bg-slate-900/20 p-6 backdrop-blur-md flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between border-b border-slate-900/60 pb-4">
+              <div className="flex items-center gap-2">
+                <Clock className="size-4 text-amber-400" />
+                <h3 className="text-base font-bold text-slate-200">Recent Lessons</h3>
+              </div>
+              <ArrowUpRight className="size-4 text-slate-500" />
+            </div>
+
+            {/* হাই-কনট্রাস্ট লিস্ট আইটেমসমূহ */}
+            <div className="mt-4 flex flex-col gap-3">
+              {recentLessons.map((lesson, index) => (
+                <div 
+                  key={index} 
+                  className="flex items-center justify-between p-3.5 rounded-xl bg-slate-950 border border-slate-900/80 hover:border-slate-800 transition-all group cursor-pointer"
+                >
+                  <div className="flex flex-col gap-1.5 max-w-[70%]">
+                    <span className="text-xs font-bold text-slate-200 line-clamp-1 group-hover:text-cyan-400 transition-colors">
+                      {lesson.title}
+                    </span>
+                    <span className="text-[10px] text-slate-500 flex items-center gap-1 font-medium">
+                      <Calendar className="size-3" /> {lesson.date}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-black text-cyan-400 bg-cyan-950/40 px-2.5 py-1 rounded-md uppercase border border-cyan-900/40 tracking-wider">
+                    {lesson.category}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ভিউ অল বাটন */}
+          <button className="w-full mt-5 py-3 text-center text-xs font-bold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl transition-all shadow-md">
+            View All Lessons
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  );
+}

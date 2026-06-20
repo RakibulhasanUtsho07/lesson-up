@@ -4,7 +4,6 @@ import React, { useState } from "react";
 // স্টেবল হিরোইউআই কম্পোনেন্ট
 import { Button, Tooltip, Card } from "@heroui/react";
 
-
 import {
   FiBookOpen,
   FiTag,
@@ -29,7 +28,7 @@ export default function AddLessonForm({ userPlan = "Free" }) {
 
   const isFreeUser = userPlan === "Free";
   const { data: session, isPending } = authClient.useSession();
-  const user = session?.user
+  const user = session?.user;
  
   const categories = [
     { label: "Personal Growth", value: "personal-growth" },
@@ -60,65 +59,64 @@ export default function AddLessonForm({ userPlan = "Free" }) {
       name: user?.name,
       userId: user?.id || user?._id,
       userImage: user?.image || "",
-      
       date: new Date()
-
     };
-    const data = await postLesson(formData)
+    const data = await postLesson(formData);
 
     console.log("Submitting Live Data:", formData);
     setIsSubmitting(false);
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 py-12 relative">
-      {/* ব্যাকগ্রাউন্ড রিফ্লেকশন ব্লাড লাইট (Aesthetic Glows) */}
-      <div className="absolute top-0 -left-4 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-4 right-4 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="bg-slate-950 w-full">
+      <div className="w-full max-w-3xl mx-auto px-4 py-8 relative bg-slate-950 text-slate-100 min-h-screen">
+      {/* ব্যাকগ্রাউন্ড রিф্লেকশন লাইট (Theme Matching Glows) */}
+      <div className="absolute top-12 left-4 size-80 bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-12 right-4 size-80 bg-orange-500/10 rounded-full blur-[100px] pointer-events-none" />
 
       {/* Header Section */}
-      <div className="mb-10 space-y-3 text-center sm:text-left relative z-10">
-        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-          Share Your <span className="bg-gradient-to-r from-cyan-400 via-indigo-500 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">Life Lesson</span>
+      <div className="mb-10 space-y-2 text-center sm:text-left relative z-10 border-b border-slate-900 pb-6">
+        <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-500 bg-clip-text text-transparent">
+          Share Your <span className="bg-gradient-to-r from-cyan-400 via-amber-400 to-orange-500 bg-clip-text text-transparent drop-shadow-sm">Life Lesson</span>
         </h1>
-        <p className="text-sm text-slate-500 font-medium max-w-xl">
+        <p className="text-sm text-slate-400 font-medium max-w-xl">
           Crystallize your wisdom, document your evolution, and inspire a global community of intentional learners.
         </p>
       </div>
 
-      {/* Main Glassmorphic Card */}
-      <Card className="bg-white/70 border bg-blue-50 border-white/40 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.10)] backdrop-blur-xl rounded-3xl overflow-visible transition-all duration-300">
+      {/* Main Glassmorphic Dark Card */}
+      <Card className="bg-slate-900/30 border border-slate-900 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] backdrop-blur-md rounded-2xl overflow-visible transition-all duration-300">
         <div className="p-6 sm:p-10">
-          <form onSubmit={handleSubmit} className="space-y-6 ">
+          <form onSubmit={handleSubmit} className="space-y-6">
 
             {/* 1. Lesson Title Input */}
             <div className="flex flex-col space-y-2">
-              <label className="font-semibold text-slate-700 text-xs tracking-wider uppercase">Lesson Title</label>
+              <label className="font-bold text-slate-400 text-xs tracking-wider uppercase">Lesson Title</label>
               <div className="relative flex items-center group">
-                <FiBookOpen className="absolute left-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors pointer-events-none z-10" />
+                <FiBookOpen className="absolute left-4 text-slate-500 group-focus-within:text-cyan-400 transition-colors pointer-events-none z-10" />
                 <input
                   type="text"
                   required
                   placeholder="e.g., What 5 Years of Failure Taught Me About Focus"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50/60 border border-slate-200 hover:border-slate-300 focus:border-indigo-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(99,102,241,0.1)] outline-none rounded-2xl text-sm text-slate-800 transition-all font-medium placeholder:text-slate-400/80"
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-950 border border-slate-900 hover:border-slate-800 focus:border-cyan-500/50 focus:bg-slate-950 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] outline-none rounded-xl text-sm text-slate-200 transition-all font-medium placeholder:text-slate-600"
                 />
               </div>
             </div>
 
             {/* 2. Full Description Textarea */}
             <div className="flex flex-col space-y-2">
-              <label className="font-semibold text-slate-700 text-xs tracking-wider uppercase">Full Description / Story / Insight</label>
+              <label className="font-bold text-slate-400 text-xs tracking-wider uppercase">Full Description / Story / Insight</label>
               <div className="relative flex items-start group">
-                <FiFileText className="absolute left-4 top-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors pointer-events-none z-10" />
+                <FiFileText className="absolute left-4 top-4 text-slate-500 group-focus-within:text-cyan-400 transition-colors pointer-events-none z-10" />
                 <textarea
                   required
                   rows={6}
                   placeholder="Deeply explain your experience, the breakthrough moment, and the structural takeaway..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50/60 border border-slate-200 hover:border-slate-300 focus:border-indigo-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(99,102,241,0.1)] outline-none rounded-2xl text-sm text-slate-800 transition-all font-medium placeholder:text-slate-400/80 resize-y min-h-[160px]"
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-950 border border-slate-900 hover:border-slate-800 focus:border-cyan-500/50 focus:bg-slate-950 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] outline-none rounded-xl text-sm text-slate-200 transition-all font-medium placeholder:text-slate-600 resize-y min-h-[160px]"
                 />
               </div>
             </div>
@@ -128,41 +126,41 @@ export default function AddLessonForm({ userPlan = "Free" }) {
 
               {/* Category Dropdown */}
               <div className="flex flex-col space-y-2">
-                <label className="font-semibold text-slate-700 text-xs tracking-wider uppercase">Category</label>
+                <label className="font-bold text-slate-400 text-xs tracking-wider uppercase">Category</label>
                 <div className="relative flex items-center group">
-                  <FiTag className="absolute left-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors pointer-events-none z-10" />
+                  <FiTag className="absolute left-4 text-slate-500 group-focus-within:text-cyan-400 transition-colors pointer-events-none z-10" />
                   <select
                     required
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full pl-12 pr-10 py-3.5 bg-slate-50/60 border border-slate-200 hover:border-slate-300 focus:border-indigo-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(99,102,241,0.1)] outline-none rounded-2xl text-sm text-slate-700 transition-all appearance-none cursor-pointer font-medium"
+                    className="w-full pl-12 pr-10 py-3.5 bg-slate-950 border border-slate-900 hover:border-slate-800 focus:border-cyan-500/50 focus:bg-slate-950 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] outline-none rounded-xl text-sm text-slate-300 transition-all appearance-none cursor-pointer font-medium"
                   >
-                    <option value="" disabled>Select a category</option>
+                    <option value="" disabled className="bg-slate-950 text-slate-600">Select a category</option>
                     {categories.map((cat) => (
-                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                      <option key={cat.value} value={cat.value} className="bg-slate-950 text-slate-300">{cat.label}</option>
                     ))}
                   </select>
-                  <div className="absolute right-4 pointer-events-none text-slate-400 text-xs transition-transform group-hover:translate-y-0.5">▼</div>
+                  <div className="absolute right-4 pointer-events-none text-slate-500 text-[10px] transition-transform group-hover:translate-y-0.5">▼</div>
                 </div>
               </div>
 
               {/* Emotional Tone Dropdown */}
               <div className="flex flex-col space-y-2">
-                <label className="font-semibold text-slate-700 text-xs tracking-wider uppercase">Emotional Tone</label>
+                <label className="font-bold text-slate-400 text-xs tracking-wider uppercase">Emotional Tone</label>
                 <div className="relative flex items-center group">
-                  <FiSmile className="absolute left-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors pointer-events-none z-10" />
+                  <FiSmile className="absolute left-4 text-slate-500 group-focus-within:text-cyan-400 transition-colors pointer-events-none z-10" />
                   <select
                     required
                     value={tone}
                     onChange={(e) => setTone(e.target.value)}
-                    className="w-full pl-12 pr-10 py-3.5 bg-slate-50/60 border border-slate-200 hover:border-slate-300 focus:border-indigo-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(99,102,241,0.1)] outline-none rounded-2xl text-sm text-slate-700 transition-all appearance-none cursor-pointer font-medium"
+                    className="w-full pl-12 pr-10 py-3.5 bg-slate-950 border border-slate-900 hover:border-slate-800 focus:border-cyan-500/50 focus:bg-slate-950 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] outline-none rounded-xl text-sm text-slate-300 transition-all appearance-none cursor-pointer font-medium"
                   >
-                    <option value="" disabled>Select a tone</option>
+                    <option value="" disabled className="bg-slate-950 text-slate-600">Select a tone</option>
                     {emotionalTones.map((t) => (
-                      <option key={t.value} value={t.value}>{t.label}</option>
+                      <option key={t.value} value={t.value} className="bg-slate-950 text-slate-300">{t.label}</option>
                     ))}
                   </select>
-                  <div className="absolute right-4 pointer-events-none text-slate-400 text-xs transition-transform group-hover:translate-y-0.5">▼</div>
+                  <div className="absolute right-4 pointer-events-none text-slate-500 text-[10px] transition-transform group-hover:translate-y-0.5">▼</div>
                 </div>
               </div>
 
@@ -170,22 +168,22 @@ export default function AddLessonForm({ userPlan = "Free" }) {
 
             {/* 4. Cover Image URL Input */}
             <div className="flex flex-col space-y-2">
-              <label className="font-semibold text-slate-700 text-xs tracking-wider uppercase">Cover Image URL (Optional)</label>
+              <label className="font-bold text-slate-400 text-xs tracking-wider uppercase">Cover Image URL (Optional)</label>
               <div className="relative flex items-center group">
-                <FiImage className="absolute left-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors pointer-events-none z-10" />
+                <FiImage className="absolute left-4 text-slate-500 group-focus-within:text-cyan-400 transition-colors pointer-events-none z-10" />
                 <input
                   type="url"
                   placeholder="https://example.com/image.png"
                   value={image}
                   onChange={(e) => setImage(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3.5 bg-slate-50/60 border border-slate-200 hover:border-slate-300 focus:border-indigo-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(99,102,241,0.1)] outline-none rounded-2xl text-sm text-slate-800 transition-all font-medium placeholder:text-slate-400/80"
+                  className="w-full pl-12 pr-4 py-3.5 bg-slate-950 border border-slate-900 hover:border-slate-800 focus:border-cyan-500/50 focus:bg-slate-950 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] outline-none rounded-xl text-sm text-slate-200 transition-all font-medium placeholder:text-slate-600"
                 />
               </div>
             </div>
 
             {/* 5. Access Level Selector */}
             <div className="flex flex-col space-y-2">
-              <label className="font-semibold text-slate-700 text-xs tracking-wider uppercase flex items-center gap-1.5">
+              <label className="font-bold text-slate-400 text-xs tracking-wider uppercase flex items-center gap-1.5">
                 Access Level {isFreeUser && <FiAlertCircle className="text-amber-500 text-sm animate-pulse" />}
               </label>
 
@@ -193,14 +191,14 @@ export default function AddLessonForm({ userPlan = "Free" }) {
                 <Tooltip
                   content="Upgrade to Premium to unlock paid locks."
                   placement="top-start"
-                  className="bg-slate-900 text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-xl border border-slate-800"
+                  className="bg-slate-900 text-slate-200 font-bold text-xs px-3.5 py-2 rounded-xl shadow-xl border border-slate-800"
                 >
-                  <div className="relative flex items-center opacity-75 cursor-not-allowed">
-                    <FiLock className="absolute left-4 text-slate-400 z-10" />
+                  <div className="relative flex items-center opacity-60 cursor-not-allowed">
+                    <FiLock className="absolute left-4 text-slate-600 z-10" />
                     <select
                       disabled
                       value="Free"
-                      className="w-full pl-12 pr-4 py-3.5 bg-slate-100/80 border border-slate-200 outline-none rounded-2xl text-sm text-slate-400 appearance-none cursor-not-allowed font-medium"
+                      className="w-full pl-12 pr-4 py-3.5 bg-slate-950/50 border border-slate-900 outline-none rounded-xl text-sm text-slate-500 appearance-none cursor-not-allowed font-medium"
                     >
                       <option value="Free">Free (Standard Tier Restriction)</option>
                     </select>
@@ -208,16 +206,16 @@ export default function AddLessonForm({ userPlan = "Free" }) {
                 </Tooltip>
               ) : (
                 <div className="relative flex items-center group">
-                  <FiLock className="absolute left-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors pointer-events-none z-10" />
+                  <FiLock className="absolute left-4 text-slate-500 group-focus-within:text-cyan-400 transition-colors pointer-events-none z-10" />
                   <select
                     value={accessLevel}
                     onChange={(e) => setAccessLevel(e.target.value)}
-                    className="w-full pl-12 pr-10 py-3.5 bg-slate-50/60 border border-slate-200 hover:border-slate-300 focus:border-indigo-500 focus:bg-white focus:shadow-[0_0_0_4px_rgba(99,102,241,0.1)] outline-none rounded-2xl text-sm text-slate-700 transition-all appearance-none cursor-pointer font-medium"
+                    className="w-full pl-12 pr-10 py-3.5 bg-slate-950 border border-slate-900 hover:border-slate-800 focus:border-cyan-500/50 focus:bg-slate-950 focus:shadow-[0_0_15px_rgba(34,211,238,0.1)] outline-none rounded-xl text-sm text-slate-300 transition-all appearance-none cursor-pointer font-medium"
                   >
-                    <option value="Free">Free (Public to all)</option>
-                    <option value="Premium">Premium ⚡ (Subscribers Only)</option>
+                    <option value="Free" className="bg-slate-950 text-slate-300">Free (Public to all)</option>
+                    <option value="Premium" className="bg-slate-950 text-cyan-400">Premium ⚡ (Subscribers Only)</option>
                   </select>
-                  <div className="absolute right-4 pointer-events-none text-slate-400 text-xs transition-transform group-hover:translate-y-0.5">▼</div>
+                  <div className="absolute right-4 pointer-events-none text-slate-500 text-[10px] transition-transform group-hover:translate-y-0.5">▼</div>
                 </div>
               )}
             </div>
@@ -227,7 +225,7 @@ export default function AddLessonForm({ userPlan = "Free" }) {
               <Button
                 type="submit"
                 isLoading={isSubmitting}
-                className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:opacity-95 text-white font-bold py-6.5 rounded-2xl shadow-[0_10px_30px_-5px_rgba(124,58,237,0.4)] transition-all duration-300 active:scale-[0.99] text-sm tracking-wide"
+                className="w-full bg-gradient-to-r from-cyan-400 via-amber-400 to-orange-500 text-slate-950 font-black py-6.5 rounded-xl shadow-[0_0_25px_rgba(34,211,238,0.15)] hover:shadow-[0_0_30px_rgba(249,115,22,0.3)] transition-all duration-300 active:scale-[0.99] text-sm tracking-wide"
                 endContent={!isSubmitting && <FiSend className="text-sm transition-transform group-hover:translate-x-1" />}
               >
                 Publish Lesson
@@ -237,6 +235,7 @@ export default function AddLessonForm({ userPlan = "Free" }) {
           </form>
         </div>
       </Card>
+    </div>
     </div>
   );
 }
