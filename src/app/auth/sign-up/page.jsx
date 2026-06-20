@@ -12,47 +12,55 @@ import { redirect } from 'next/navigation';
 function RegisterPage() {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const handleRegistration = async (data) => {
-        const { email, name, photo, password } = data;
+   const handleRegistration = async (data) => {
+    const { email, name, photo, password } = data;
 
-        console.log(data, "data");
-        const { data: res, error } = await authClient.signUp.email({
-            name: name,
-            email: email,
-            password: password,
-            image: photo,
-            callbackURL: "/",
+    console.log(data, "data");
+
+    // ১. এখানে authClient এর রিকোয়েস্টে plan: "Free" পাস করা হচ্ছে
+    const { data: res, error } = await authClient.signUp.email({
+        name: name,
+        email: email,
+        password: password,
+        image: photo,
+        callbackURL: "/",
+        // যদি আপনার authClient (যেমন Better Auth বা কাস্টম কোনো সেটআপ) অতিরিক্ত মেটাডেটা বা কাস্টম ফিল্ড সাপোর্ট করে:
+       additionalFields: {
+            plan: "Free"
+        }
+    });
+
+    // ২. যদি কোনো এরর আসে, তাহলে টোস্ট দেখাবে এবং ফাংশন এখানেই থেমে যাবে
+    if (error) {
+        toast.error(error.message || "Invalid email or password.", {
+            position: "top-right",
+            duration: 4000,
+            style: {
+                borderLeft: "5px solid #EF4444", 
+                padding: "16px",
+                color: "#FFFFFF", 
+                background: "#11131c", 
+                borderRadius: "12px", 
+                boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3)",
+                fontSize: "14px",
+                fontWeight: "500"
+            },
+            iconTheme: {
+                primary: "#EF4444",
+                secondary: "#FFFFFF",
+            },
         });
-        if(data){
-            redirect("/auth/sign-in")
-        }
+        return; // এরর হলে নিচে আর যাবে না
+    }
 
-        if (error) {
-            toast.error(error.message || "Invalid email or password.", {
-                position: "top-right",
-                duration: 4000,
-                style: {
-                    borderLeft: "5px solid #EF4444", 
-                    padding: "16px",
-                    color: "#FFFFFF", 
-                    background: "#11131c", 
-                    borderRadius: "12px", 
-                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.3)",
-                    fontSize: "14px",
-                    fontWeight: "500"
-                },
-                iconTheme: {
-                    primary: "#EF4444",
-                    secondary: "#FFFFFF",
-                },
-            });
-            return;
-        }
-        if (res) {
-            toast.success("SignUp Successfully");
-        }
-    };
-
+    // ৩. সফলভাবে সাইন-আপ হলে টোস্ট দেখাবে এবং রিডাইরেক্ট হবে
+    if (res) {
+        toast.success("SignUp Successfully");
+        
+        // সফল হওয়ার পরই কেবল রিডাইরেক্ট করা উচিত
+        redirect("/auth/sign-in");
+    }
+};
     const handleGoogleSingIn = async () => {
         // await authClient.signIn.social({
         //     provider: "google"

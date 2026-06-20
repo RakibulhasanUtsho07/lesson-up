@@ -5,17 +5,18 @@ import React, { useState } from "react";
 import { Button, Tooltip, Card } from "@heroui/react";
 
 
-import { 
-  FiBookOpen, 
-  FiTag, 
-  FiSmile, 
-  FiLock, 
-  FiImage, 
+import {
+  FiBookOpen,
+  FiTag,
+  FiSmile,
+  FiLock,
+  FiImage,
   FiSend,
   FiAlertCircle,
   FiFileText
-} from "react-icons/fi"; 
+} from "react-icons/fi";
 import { postLesson } from "@/lib/action/action";
+import { authClient } from "@/lib/auth-client";
 
 export default function AddLessonForm({ userPlan = "Free" }) {
   const [title, setTitle] = useState("");
@@ -27,7 +28,9 @@ export default function AddLessonForm({ userPlan = "Free" }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isFreeUser = userPlan === "Free";
-
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user
+ 
   const categories = [
     { label: "Personal Growth", value: "personal-growth" },
     { label: "Career", value: "career" },
@@ -54,8 +57,14 @@ export default function AddLessonForm({ userPlan = "Free" }) {
       tone,
       image,
       accessLevel: isFreeUser ? "Free" : accessLevel,
+      name: user?.name,
+      userId: user?.id || user?._id,
+      userImage: user?.image || "",
+      
+      date: new Date()
+
     };
-   const data=  await postLesson(formData)
+    const data = await postLesson(formData)
 
     console.log("Submitting Live Data:", formData);
     setIsSubmitting(false);
@@ -81,7 +90,7 @@ export default function AddLessonForm({ userPlan = "Free" }) {
       <Card className="bg-white/70 border bg-blue-50 border-white/40 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.10)] backdrop-blur-xl rounded-3xl overflow-visible transition-all duration-300">
         <div className="p-6 sm:p-10">
           <form onSubmit={handleSubmit} className="space-y-6 ">
-            
+
             {/* 1. Lesson Title Input */}
             <div className="flex flex-col space-y-2">
               <label className="font-semibold text-slate-700 text-xs tracking-wider uppercase">Lesson Title</label>
@@ -116,7 +125,7 @@ export default function AddLessonForm({ userPlan = "Free" }) {
 
             {/* 3. Category & Emotional Tone Dropdowns */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              
+
               {/* Category Dropdown */}
               <div className="flex flex-col space-y-2">
                 <label className="font-semibold text-slate-700 text-xs tracking-wider uppercase">Category</label>
@@ -181,8 +190,8 @@ export default function AddLessonForm({ userPlan = "Free" }) {
               </label>
 
               {isFreeUser ? (
-                <Tooltip 
-                  content="Upgrade to Premium to unlock paid locks." 
+                <Tooltip
+                  content="Upgrade to Premium to unlock paid locks."
                   placement="top-start"
                   className="bg-slate-900 text-white font-semibold text-xs px-3.5 py-2 rounded-xl shadow-xl border border-slate-800"
                 >

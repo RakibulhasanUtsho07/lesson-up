@@ -63,7 +63,7 @@ export default function AppNavbar() {
                             {/* Sleek, High-Contrast Typography */}
                             <div className="flex flex-col leading-none">
                                 <span className="text-xl font-black tracking-tight text-white group-hover:text-cyan-400 transition-colors duration-300">
-                                    lesson<span className="bg-gradient-to-r from-cyan-400 via-amber-400 to-orange-500 bg-clip-text text-transparent">up</span>
+                                    Lesson<span className="bg-gradient-to-r from-cyan-400 via-amber-400 to-orange-500 bg-clip-text text-transparent">Up</span>
                                 </span>
                             </div>
                         </Link>
@@ -71,11 +71,24 @@ export default function AppNavbar() {
 
                     {/* 2. Desktop Center Links */}
                     <div className="hidden md:flex items-center gap-6">
-                        <Link href="/" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
+                       {!isLoggedIn && (
+                        <>
+                         <Link href="/" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
                             Home
                         </Link>
+                        </>
+                       )}
+                        {
+                            isLoggedIn && (
+                                <>
+                                <Link href="/dashboard " className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
+                                Dashboard
+                                </Link>
+                                </>
+                            )
+                        }
 
-                        {isLoggedIn && (
+                        {/* {isLoggedIn && (
                             <>
                                 <Link href="/dashboard/post-lesson" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
                                     Post Lesson
@@ -84,7 +97,7 @@ export default function AppNavbar() {
                                     My Lessons
                                 </Link>
                             </>
-                        )}
+                        )} */}
 
                         <Link href="/public-lessons" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
                             Public Lessons
@@ -130,10 +143,10 @@ export default function AppNavbar() {
                                     {
                                         currentUser?.image?.startsWith("http") ? (
                                             <Image
-                                                src={currentUser.image}
+                                                src={currentUser.image || ""}
                                                 width={35}
                                                 height={35}
-                                                alt={currentUser.name}
+                                                alt={currentUser.name.split(" ")}
                                                 className="rounded-full object-cover"
                                             />
                                         ) : (
