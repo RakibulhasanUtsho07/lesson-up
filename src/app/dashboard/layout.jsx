@@ -7,7 +7,7 @@ export default function DashboardLayout({ children }) {
     <div className="flex h-screen w-full bg-[#030712] overflow-hidden">
       
      
-      <aside className=" md:hidden h-full w-64 shrink-0 border-r border-slate-900/60 bg-slate-950 hidden md:block">
+      <aside className=" sm:hidden h-full w-64 shrink-0 border-r border-slate-900/60 bg-slate-950 hidden md:block">
         <DashboardHomePageSidebar />
       </aside>
 

@@ -34,5 +34,25 @@ export const userPostedLessons = async (userId) => {
     return [];
   }
 };
-
-
+export  const postLikedData = async (likedData) => {
+  console.log(likedData, "liked Data")
+    
+  const res = await fetch("http://localhost:5000/likes", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(likedData)
+  });
+};
+export  const postSavedData = async (savedData) => {
+  console.log(savedData, "saved Data")
+    
+  const res = await fetch("http://localhost:5000/savePosts", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(savedData)
+  });
+};

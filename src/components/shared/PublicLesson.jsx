@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Card, Button, Tooltip, Avatar } from "@heroui/react";
+import {Link, Card, Button, Tooltip, Avatar } from "@heroui/react";
 import { 
   FiClock, 
   FiArrowUpRight, 
@@ -133,7 +133,7 @@ function PublicLesson({ lesson }) {
               </button>
             </Tooltip>
             
-            {/* শেয়ার বাটন */}
+            
             <Tooltip content="Share" className="bg-slate-950 border border-slate-800 text-xs text-slate-300">
               <button type="button" className="p-2 text-slate-500 hover:text-fuchsia-400 rounded-lg hover:bg-slate-800/50 transition-colors">
                 <FiShare2 className="text-sm" />
@@ -141,13 +141,14 @@ function PublicLesson({ lesson }) {
             </Tooltip>
 
             {/* Read Insights মডার্ন বাটন */}
-            <Button
+            <Link
+              href={`/lessons-details/${_id}`}
               size="sm"
               className="ml-1 bg-slate-950 border border-slate-800 hover:border-cyan-500/50 text-[11px] font-black text-slate-300 hover:text-white px-2.5 py-1.5 rounded-xl transition-all group-hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]"
               endContent={<FiArrowUpRight className="text-cyan-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />}
             >
               Read
-            </Button>
+            </Link>
           </div>
         </div>
       </div>

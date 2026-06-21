@@ -1,28 +1,90 @@
+"use client"
 import React, { useState } from "react";
 import { Button } from "@heroui/react";
 import { FiHeart, FiBookmark, FiFlag, FiX } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
+import { postLikedData, postSavedData } from "@/lib/action/action";
 
-export default function InteractionBar({ lessonId, likes, setLikes, favorites, setFavorites, user }) {
+export default function InteractionBar({ lesson }) {
+  const { _id, likes = 0, favorites = 0 } = lesson || {};
+  
+  const [likesCount, setLikesCount] = useState(Number(likes));
+  const [favoritesCount, setFavoritesCount] = useState(Number(favorites));
+
+  const [isLiked, setIsLiked] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [reportReason, setReportReason] = useState("Spam");
 
-  const hasLiked = user ? likes.includes(user.id) : false;
-  const hasSaved = user ? favorites.includes(user.id) : false;
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
 
-  const handleLikeToggle = () => {
+  // Handles Liking and Sends data to the database
+  const handleLikeToggle = async () => {
     if (!user) return toast.error("Please log in to like this lesson!");
     
-    if (hasLiked) {
-      setLikes(prev => prev.filter(id => id !== user.id));
+    // Optimistic UI updates
+    if (isLiked) {
+      setLikesCount(prev => prev - 1); 
+      setIsLiked(false);
     } else {
-      setLikes(prev => [...prev, user.id]);
+      setLikesCount(prev => prev + 1); 
+      setIsLiked(true);
+
+      const likedUserData = {
+        userId: user?.id || user?._id,
+        userName: user?.name,
+        userImage: user?.image || "",
+        lessonId: lesson?.id || _id,
+      };
+
+      try {
+        // Trigger Server Action on user click
+        await postLikedData(likedUserData);
+        
+      } catch (error) {
+        // Rollback state if the database operation fails
+        setLikesCount(prev => prev - 1);
+        setIsLiked(false);
+        
+      }
     }
   };
 
+ const handleSaveToggle = async () => {
+  if (!user) return toast.error("Please log in to save this lesson!");
+  
+  // Optimistic UI updates
+  if (isSaved) {
+    setFavoritesCount(prev => prev - 1);
+    setIsSaved(false);
+    // Optional: Add deleteSavedData(lessonId) here if you handle unsaving in the DB
+  } else {
+    setFavoritesCount(prev => prev + 1);
+    setIsSaved(true);
+
+    const savedData = {
+      ...lesson,
+      userId: user?.id || user?._id
+    };
+
+    try {
+      // Pass the savedData payload to your Server Action
+      await postSavedData(savedData);
+      toast.success("Lesson saved successfully!");
+    } catch (error) {
+      // Rollback UI state if the backend database operation fails
+      setFavoritesCount(prev => prev - 1);
+      setIsSaved(false);
+      toast.error("Failed to save lesson. Please try again.");
+    }
+  }
+};
+
   const handleReportSubmit = (e) => {
     e.preventDefault();
-    // এখানে আপনার DB-র lessonsReports কালেকশনে এন্ট্রি তৈরি হবে
     toast.success("Incident logged. Content moderation team notified.");
     setIsReportOpen(false);
   };
@@ -30,23 +92,42 @@ export default function InteractionBar({ lessonId, likes, setLikes, favorites, s
   return (
     <div className="flex items-center justify-between p-4 bg-slate-950/20 border border-slate-900 rounded-xl">
       <div className="flex items-center gap-3">
-        {/* Real-time Like Button */}
+        {/* Like Button */}
         <Button 
           size="sm" 
           onClick={handleLikeToggle}
-          className={`font-bold text-xs rounded-xl h-9 px-4 ${hasLiked ? "bg-rose-500/20 text-rose-400 border border-rose-500/30" : "bg-slate-950 border border-slate-900 text-slate-400"}`}
-          startContent={<FiHeart className={hasLiked ? "fill-rose-400" : ""} />}
+          className={`font-bold text-xs rounded-xl h-9 px-4 transition-all ${
+            isLiked 
+              ? "bg-rose-500/20 text-rose-400 border border-rose-500/30" 
+              : "bg-slate-950 border border-slate-900 text-slate-400 hover:text-rose-400 hover:border-rose-500/20"
+          }`}
+          startContent={
+            <FiHeart 
+              size={16} 
+              className={isLiked ? "fill-rose-400 text-rose-400" : "text-slate-400"} 
+            />
+          }
         >
-          {hasLiked ? "Liked" : "Like"}
+          {isLiked ? "Liked" : "Like"} ({likesCount})
         </Button>
 
         {/* Save Toggle Button */}
         <Button 
           size="sm"
-          className="bg-slate-950 border border-slate-900 font-bold text-xs rounded-xl h-9 text-slate-400 hover:text-cyan-400"
-          startContent={<FiBookmark />}
+          onClick={handleSaveToggle}
+          className={`font-bold text-xs rounded-xl h-9 px-4 transition-all ${
+            isSaved 
+              ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30" 
+              : "bg-slate-950 border border-slate-900 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/20"
+          }`}
+          startContent={
+            <FiBookmark 
+              size={16} 
+              className={isSaved ? "fill-cyan-400 text-cyan-400" : "text-slate-400"} 
+            />
+          }
         >
-          Save
+          {isSaved ? "Saved" : "Save"} ({favoritesCount})
         </Button>
       </div>
 
@@ -60,9 +141,9 @@ export default function InteractionBar({ lessonId, likes, setLikes, favorites, s
         Report Incident
       </Button>
 
-      {/* 🚩 Report Popup Modal Overlay */}
+      {/* Report Popup Modal */}
       {isReportOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm pointer-events-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
           <form onSubmit={handleReportSubmit} className="w-full max-w-md bg-slate-950 border border-slate-900 p-6 rounded-2xl shadow-2xl space-y-4">
             <div className="flex items-center justify-between border-b border-slate-900 pb-3">
               <h3 className="text-sm font-black text-white flex items-center gap-2"><FiFlag className="text-rose-500" /> Report Lesson</h3>
