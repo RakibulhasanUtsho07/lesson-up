@@ -91,7 +91,7 @@ async function PublicLessonsPage() {
                 key={lesson._id || ind} 
                 className="group transform hover:-translate-y-1 transition-all duration-300"
               >
-                {/* আপনার এক্সিস্টিং কার্ড কম্পোনেন্ট রেন্ডার করা হচ্ছে */}
+                
                 <PublicLesson lesson={lesson} />
               </div>
             ))}

@@ -5,6 +5,11 @@ import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import LessonContent from "@/components/shared/LessonContent";
+import InteractionBar from "@/components/shared/InteractionBar";
+import CommentSection from "@/components/shared/CommentSection";
+import AuthorAndStats from "@/components/shared/AuthorAndStatus";
+import RecommendedLessons from "@/components/shared/RecommendedLessons";
+import UpgradeBanner from "@/components/shared/UpgradeBanner";
 
 // 🧩 সাব-কম্পোনেন্টস ইমপোর্ট
 
@@ -18,7 +23,7 @@ const mockLesson = {
   category: "Career & Professional Growth",
   tone: "Professional & Pragmatic",
   image: "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?w=800&auto=format&fit=crop&q=80",
-  accessLevel: "Premium", // টেস্টিং এর জন্য 'Premium' দেওয়া হয়েছে (Free/Premium)
+  accessLevel: "Premium", 
   name: "Alex Rivera",
   userId: "usr_9a8b7c6d5e4f3g2h",
   userImage: "https://randomuser.me/api/portraits/men/32.jpg",
@@ -32,11 +37,11 @@ export default function LessonDetailsPage() {
   const { data: session } = authClient.useSession();
   const user = session?.user;
 
-  // প্রিলিমিনারি ইউজার টিয়ার চেক (ধরে নিচ্ছি premium ইউজার নয়)
+  
   const isUserPremium = false; 
   const isLocked = mockLesson.accessLevel === "Premium" && !isUserPremium;
 
-  // স্টেট ম্যানেজমেন্ট (রিয়েল-টাইম লাইক ও ফেভারিট টগল)
+  
   const [likes, setLikes] = useState(mockLesson.likes);
   const [favorites, setFavorites] = useState(mockLesson.favorites);
 
@@ -44,10 +49,10 @@ export default function LessonDetailsPage() {
     <div className="min-h-screen bg-[#030712] text-slate-100 p-4 sm:p-8 relative">
       <div className="absolute top-[-10%] right-[-10%] size-[600px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* ⭐ কন্ডিশনাল প্রিমিয়াম লক স্ক্রিন / আপগ্রেড ব্যানার */}
+     
       {isLocked && <UpgradeBanner />}
 
-      {/* মূল লেআউট গ্রিড (বাম পাশে মেইন ডিটেইলস, ডান পাশে অথর ও রিলেটেড কন্টেন্ট) */}
+      
       <div className={`max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8 relative z-10 ${isLocked ? "blur-xl select-none pointer-events-none" : ""}`}>
         
         {/* Left Side: Main Body (2 Columns) */}
