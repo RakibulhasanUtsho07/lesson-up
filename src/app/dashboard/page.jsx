@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { 
   BookOpen, 
@@ -8,19 +6,47 @@ import {
   Clock, 
   Plus, 
   Sparkles, 
-  TrendingUp,
   ArrowUpRight,
   GraduationCap
 } from "@gravity-ui/icons";
 import { FiTrendingUp } from "react-icons/fi";
 
-export default function DashboardHomePage() {
-  // ১. স্ট্যাটিস্টিকস ডেটা (উন্নত ভিজ্যুয়াল ও কনট্রাস্ট সহ)
+import { authClient } from "@/lib/auth-client"; 
+import { countUserLessons } from "@/lib/data/data";
+import { headers } from "next/headers";
+
+export default async function DashboardHomePage() {
+  // ✅ কুকি ও হেডার সহ সেফলি সেশন রিড করা
+  const session = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers()
+    }
+  });
+  
+  // 🔍 পুরো সেশন ডাটা টার্মিনালে চেক করার জন্য
+  console.log("=== DEBUG SESSION ===", session);
+
+ const user = session?.data?.user; 
+  
+  // 3. ইউজারের ইউনিক আইডি এক্সট্রাক্ট করা
+  const userId = user?.id || session?.data?.session?.userId;
+  console.log("🎯 Extracted userId:", userId);
+  
+
+  // 🔄 ক্র্যাশ প্রোটেকশন: userId না থাকলে ব্যাকঅ্যান্ড ফেচ এড়ানো হলো
+  let countData = { totalLessons: 0 };
+  if (userId) {
+    countData = await countUserLessons(userId);
+  } else {
+    console.log("⚠️ No active user session found. Please login.");
+  }
+  console.log("📊 countData:", countData);
+
   const stats = [
     { 
       label: "Total Lessons Created", 
-      value: "24", 
-      change: "+4 this week", 
+      value: countData?.totalLessons ?? 0, // সেফ ফলব্যাক
+      change: "Live Database", 
       icon: BookOpen, 
       accentColor: "from-cyan-500/20 to-blue-600/5",
       iconColor: "text-cyan-400",
@@ -46,7 +72,7 @@ export default function DashboardHomePage() {
     },
   ];
 
-  // ২. রিসেন্ট লেসন ডেটা
+  // রিসেন্ট লেসন ডামি ডেটা
   const recentLessons = [
     { title: "React Compound Components Patterns", date: "2 hours ago", category: "Web Dev" },
     { title: "Advanced Architecture with HeroUI v3", date: "Yesterday", category: "UI/UX" },
@@ -54,10 +80,9 @@ export default function DashboardHomePage() {
   ];
 
   return (
-    // এখানে bg-slate-950 দিয়ে মেইন কন্টেন্টের সাদা ব্যাকগ্রাউন্ডের সমস্যা দূর করা হলো
-    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 space-y-8 animate-fade-in">
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 space-y-8">
       
-      {/* 🌟 হেডার সেকশন: স্বাগতম বার্তা ও ইউনিক অ্যাকশন বাটন */}
+      {/* 🌟 হেডার সেকশন */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-900 pb-6">
         <div>
           <div className="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-widest">
@@ -68,18 +93,17 @@ export default function DashboardHomePage() {
             Overview
           </h1>
           <p className="text-sm text-slate-400 mt-1">
-            Welcome back! Here is what's happening with your lessons today.
+            Welcome back, <span className="text-slate-200 font-bold">{user?.name || "Learner"}</span>! Here is what's happening today.
           </p>
         </div>
         
-        {/* কুইক শর্টকাট অ্যাকশন বাটন (ইউনিক গ্রেডিয়েন্ট এবং শ্যাডো) */}
         <button className="group flex items-center justify-center gap-2 px-5 py-3 text-sm font-bold text-slate-950 bg-gradient-to-r from-cyan-400 via-amber-400 to-orange-500 rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.15)] hover:shadow-[0_0_25px_rgba(249,115,22,0.35)] hover:scale-[1.02] transition-all duration-300 shrink-0">
           <Plus className="size-4 stroke-[3] group-hover:rotate-90 transition-transform duration-300" />
           Create New Lesson
         </button>
       </div>
 
-      {/* 📊 ৩. স্ট্যাটস কার্ডস গ্রিড */}
+      {/* 📊 স্ট্যাটস কার্ডস গ্রিড */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {stats.map((stat, i) => {
           const Icon = stat.icon;
@@ -100,18 +124,16 @@ export default function DashboardHomePage() {
                   {stat.change}
                 </span>
               </div>
-              
-              {/* ব্যাকগ্রাউন্ড নিয়ন গ্লো ইফেক্ট */}
               <div className={`absolute -bottom-10 -right-10 size-32 rounded-full bg-gradient-to-br ${stat.accentColor} opacity-40 blur-2xl transition-opacity group-hover:opacity-60`} />
             </div>
           );
         })}
       </div>
 
-      {/* 🗺️ ৪. চার্ট এবং রিসেন্ট অ্যাক্টিভিটি এরিয়া */}
+      {/* 🗺️ চার্ট এবং রিসেন্ট অ্যাক্টিভিটি এরিয়া */}
       <div className="grid gap-6 lg:grid-cols-3">
         
-        {/* অ্যানালিটিক্স কাস্টম চার্ট (২ কলাম জুড়ে থাকবে) */}
+        {/* চার্ট */}
         <div className="lg:col-span-2 rounded-2xl border border-slate-900 bg-slate-900/20 p-6 backdrop-blur-md flex flex-col justify-between min-h-[340px]">
           <div className="flex items-center justify-between border-b border-slate-900/60 pb-4">
             <div className="flex items-center gap-2">
@@ -123,7 +145,6 @@ export default function DashboardHomePage() {
             </span>
           </div>
 
-          {/* স্টাইলড হাই-কনট্রাস্ট বার চার্ট */}
           <div className="flex items-end justify-between gap-4 h-48 pt-6 px-2">
             {[45, 75, 35, 95, 60, 45, 85].map((height, index) => (
               <div key={index} className="flex-1 flex flex-col items-center gap-2 group cursor-pointer">
@@ -141,7 +162,7 @@ export default function DashboardHomePage() {
           </div>
         </div>
 
-        {/* ৫. রিসেন্টলি অ্যাডেড লেসন লিস্ট */}
+        {/* রিসেন্ট লেসন লিস্ট */}
         <div className="rounded-2xl border border-slate-900 bg-slate-900/20 p-6 backdrop-blur-md flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between border-b border-slate-900/60 pb-4">
@@ -152,7 +173,6 @@ export default function DashboardHomePage() {
               <ArrowUpRight className="size-4 text-slate-500" />
             </div>
 
-            {/* হাই-কনট্রাস্ট লিস্ট আইটেমসমূহ */}
             <div className="mt-4 flex flex-col gap-3">
               {recentLessons.map((lesson, index) => (
                 <div 
@@ -175,14 +195,12 @@ export default function DashboardHomePage() {
             </div>
           </div>
 
-          {/* ভিউ অল বাটন */}
           <button className="w-full mt-5 py-3 text-center text-xs font-bold text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 rounded-xl transition-all shadow-md">
             View All Lessons
           </button>
         </div>
 
       </div>
-
     </div>
   );
 }

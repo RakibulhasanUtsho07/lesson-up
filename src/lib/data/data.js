@@ -8,3 +8,47 @@ export const getLessonDetails = async(id)=>{
   const data = await res.json()
   return data
 }
+export const getFavoriteLessons = async (userId) => {
+  try {
+    if (!userId) return [];
+
+    const res = await fetch(`http://localhost:5000/savePosts/${userId}`, {
+      cache: "no-store" 
+    });
+
+    
+    console.log(`📡 API URL: http://localhost:5000/savePosts/${userId} | Status: ${res.status}`);
+
+    if (!res.ok) {
+     
+      console.error(`❌ Server replied with status code: ${res.status}`);
+      return []; 
+    }
+
+    const data = await res.json();
+    return data; 
+
+  } catch (error) {
+    console.error("Error in getFavoriteLessons:", error);
+    return [];
+  }
+};
+export const countUserLessons = async (userId) => {
+  try {
+  
+    const res = await fetch(`http://localhost:5000/lessons/count/${userId}`, {
+      cache: "no-store" 
+    });
+    
+    if (!res.ok) {
+      throw new Error(`Server responded with status: ${res.status}`);
+    }
+
+  
+    const data = await res.json(); 
+    return data; 
+  } catch (error) {
+    console.error("Error in countUserLessons fetch:", error);
+    return { totalLessons: 0 }; 
+  }
+};

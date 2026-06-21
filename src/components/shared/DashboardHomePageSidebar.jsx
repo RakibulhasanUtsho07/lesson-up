@@ -26,7 +26,7 @@ export default function Navigation() {
       const user = session?.user
   // ড্যাশবোর্ডের রাউট লিংকসহ আইটেম লিস্ট
   const userNavLink = [
-  { icon: House, label: "Dashboard Home", link: "/dashboard" },
+  { icon: House, label: "Dashboard Home", link: "" },
   { icon: BiPlusCircle, label: "Post Lesson", link: "post-lesson" },
   { icon: BookOpen, label: "My Lessons", link: "my-lessons" },
   { icon: Heart, label: "My Favorites", link: "my-favorites" },
