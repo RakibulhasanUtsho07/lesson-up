@@ -30,14 +30,14 @@ export default function Navigation() {
   { icon: BiPlusCircle, label: "Post Lesson", link: "post-lesson" },
   { icon: BookOpen, label: "My Lessons", link: "my-lessons" },
   { icon: Heart, label: "My Favorites", link: "my-favorites" },
-  { icon: Person, label: "Profile", link: "profile" },
+  { icon: Person, label: "Profile", link: "my-profile" },
 ];
 const adminNavItems = [
-  { icon: LuLayoutDashboard, label: "Admin Home", link: "/dashboard/admin" },
-  { icon: BsPeople, label: "Manage Users", link: "/dashboard/admin/manage-users" },
-  { icon: LuBookOpenCheck, label: "Manage Lessons", link: "/dashboard/admin/manage-lessons" },
-  { icon: FiAlertTriangle, label: "Reported Lessons", link: "/dashboard/admin/reported-lessons" },
-  { icon: RiShieldUserFill, label: "Admin Profile", link: "/dashboard/admin/profile" },
+  { icon: LuLayoutDashboard, label: "Admin Home", link: "admin" },
+  { icon: BsPeople, label: "Manage Users", link: "admin/manage-users" },
+  { icon: LuBookOpenCheck, label: "Manage Lessons", link: "admin/manage-lessons" },
+  { icon: FiAlertTriangle, label: "Reported Lessons", link: "admin/reported-lessons" },
+  { icon: RiShieldUserFill, label: "Admin Profile", link: "admin/profile" },
 ];
 // const navItems = user?.role === "user" ? userNavLink : adminNavItems
 // const navItems = {}
