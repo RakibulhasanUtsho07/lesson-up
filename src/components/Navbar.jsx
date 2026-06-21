@@ -81,7 +81,7 @@ export default function AppNavbar() {
                         {
                             isLoggedIn && (
                                 <>
-                                <Link href="/dashboard " className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
+                                <Link href="/dashboard" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
                                 Dashboard
                                 </Link>
                                 </>
