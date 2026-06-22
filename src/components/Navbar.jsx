@@ -37,9 +37,9 @@ export default function AppNavbar() {
     };
 
     return (
-        // ১. ব্যাকগ্রাউন্ড থিম পরিবর্তন: আল্ট্রা-ডার্ক সাইবার মেটালিক থিম উইথ গ্লাস ইফেক্ট ও বটম নিওন-বর্ডার লাইন
+       
         <nav className="sticky top-0 z-50 w-full border-b border-white/[0.06] bg-gradient-to-r from-[#0a0b10]/90 via-[#11131c]/85 to-[#0a0b10]/90 backdrop-blur-xl backdrop-saturate-150 shadow-[0_4px_30px_rgba(0,0,0,0.4)]">
-            {/* কালারটিকে আরও প্রিমিয়াম লুক দিতে একটি মায়াবী ব্যাকগ্রাউন্ড রিফ্লেকশন লেয়ার */}
+           
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-500/[0.04] via-transparent to-transparent pointer-events-none" />
 
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
@@ -104,7 +104,7 @@ export default function AppNavbar() {
                         </Link>
 
                         {isLoggedIn && userPlan === "Free" && (
-                            <Link href="/pricing" className="text-sm font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent animate-pulse">
+                            <Link href="/plan" className="text-sm font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent animate-pulse">
                                 Upgrade ⚡
                             </Link>
                         )}

@@ -3,8 +3,10 @@ import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
 import { Sparkles, ShieldCheck } from "@gravity-ui/icons";
-import PricingCard from "./PricingCard";
-import ComparisonTable from "./ComparisonTable";
+import PricingCard from "@/components/shared/PricingCard";
+import ComparisonTable from "@/components/shared/ComparisonTable";
+
+
 
 export default async function UpgradeUserExperiencePage() {
 
