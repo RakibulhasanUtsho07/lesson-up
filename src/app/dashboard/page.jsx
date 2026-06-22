@@ -9,10 +9,11 @@ import {
   ArrowUpRight,
   GraduationCap
 } from "@gravity-ui/icons";
+import {Link} from "@heroui/react";
 import { FiTrendingUp } from "react-icons/fi";
 
 import { authClient } from "@/lib/auth-client"; 
-import { countUserLessons } from "@/lib/data/data";
+import { countUserFavoriteLessons, countUserLessons } from "@/lib/data/data";
 import { headers } from "next/headers";
 
 export default async function DashboardHomePage() {
@@ -28,12 +29,12 @@ export default async function DashboardHomePage() {
 
  const user = session?.data?.user; 
   
-  // 3. ইউজারের ইউনিক আইডি এক্সট্রাক্ট করা
+ 
   const userId = user?.id || session?.data?.session?.userId;
   console.log("🎯 Extracted userId:", userId);
   
 
-  // 🔄 ক্র্যাশ প্রোটেকশন: userId না থাকলে ব্যাকঅ্যান্ড ফেচ এড়ানো হলো
+  
   let countData = { totalLessons: 0 };
   if (userId) {
     countData = await countUserLessons(userId);
@@ -41,7 +42,12 @@ export default async function DashboardHomePage() {
     console.log("⚠️ No active user session found. Please login.");
   }
   console.log("📊 countData:", countData);
-
+  let countUserFavoritesData = {totalSavedLessons : 0}
+  if(userId){
+    countUserFavoritesData= await countUserFavoriteLessons(userId)
+  }else{
+    console.log("⚠️ No active user session found. Please login.");
+  }
   const stats = [
     { 
       label: "Total Lessons Created", 
@@ -54,7 +60,7 @@ export default async function DashboardHomePage() {
     },
     { 
       label: "Total Saved Lessons", 
-      value: "12", 
+      value: countUserFavoritesData.totalSavedLessons ?? 0, 
       change: "2 categories", 
       icon: Bookmark, 
       accentColor: "from-amber-500/20 to-orange-600/5",
@@ -97,10 +103,10 @@ export default async function DashboardHomePage() {
           </p>
         </div>
         
-        <button className="group flex items-center justify-center gap-2 px-5 py-3 text-sm font-bold text-slate-950 bg-gradient-to-r from-cyan-400 via-amber-400 to-orange-500 rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.15)] hover:shadow-[0_0_25px_rgba(249,115,22,0.35)] hover:scale-[1.02] transition-all duration-300 shrink-0">
+        <Link href="/dashboard/post-lesson" className="group flex items-center justify-center gap-2 px-5 py-3 text-sm font-bold text-slate-950 bg-gradient-to-r from-cyan-400 via-amber-400 to-orange-500 rounded-xl shadow-[0_0_20px_rgba(34,211,238,0.15)] hover:shadow-[0_0_25px_rgba(249,115,22,0.35)] hover:scale-[1.02] transition-all duration-300 shrink-0">
           <Plus className="size-4 stroke-[3] group-hover:rotate-90 transition-transform duration-300" />
           Create New Lesson
-        </button>
+        </Link>
       </div>
 
       {/* 📊 স্ট্যাটস কার্ডস গ্রিড */}
