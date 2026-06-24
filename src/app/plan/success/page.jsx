@@ -16,29 +16,28 @@ export default async function Success({ searchParams }) {
     expand: ['line_items', 'payment_intent']
   })
 
-  // পেমেন্ট কমপ্লিট না হয়ে ওপেন থাকলে হোমপেজে পাঠাবে
+  
   if (status === 'open') {
     return redirect('/')
   }
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6 relative overflow-hidden">
-      {/* ব্যাকগ্রাউন্ড ম্যাজিকাল নিয়ন গ্লো ইফেক্ট */}
+     
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-[500px] rounded-full bg-gradient-to-tr from-cyan-500/10 to-amber-500/5 blur-[120px] pointer-events-none" />
 
-      {/* মেইন সাকসেস কার্ড কন্টেইনার */}
+     
       <div className="max-w-xl w-full rounded-3xl border border-slate-900 bg-slate-900/40 p-8 md:p-10 backdrop-blur-2xl shadow-[0_0_60px_rgba(34,211,238,0.05)] text-center space-y-8 relative z-10 group">
         
-        {/* টপ গ্লোয়িং বর্ডার লাইট */}
+        
         <div className="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent" />
 
-        {/* সাকসেস অ্যানিমেটেড আইকন */}
         <div className="inline-flex p-4 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.1)] relative">
           <FiCheckCircle className="size-14 animate-pulse" />
           <div className="absolute inset-0 rounded-full border border-emerald-500/40 scale-110 animate-ping opacity-20 pointer-events-none" />
         </div>
 
-        {/* হেডিংস */}
+      
         <div className="space-y-2">
           <span className="text-xs font-black tracking-widest text-cyan-400 uppercase">
             Payment Received
@@ -53,7 +52,6 @@ export default async function Success({ searchParams }) {
 
         <div className="w-full h-[1px] bg-slate-900" />
 
-        {/* ইউজার ইনফরমেশন অ্যান্ড নোটিফিকেশন বক্স */}
         <div className="bg-slate-950/60 rounded-2xl border border-slate-900/80 p-5 text-left space-y-4">
           <div className="flex items-start gap-3">
             <FiMail className="text-cyan-400 size-5 shrink-0 mt-0.5" />
@@ -77,7 +75,7 @@ export default async function Success({ searchParams }) {
           </div>
         </div>
 
-        {/* অ্যাকশন বাটন—ইউজারকে সরাসরি ড্যাশবোর্ডে ফিরিয়ে নেওয়ার জন্য */}
+    
         <div className="pt-2">
           <Link
             href="/dashboard"

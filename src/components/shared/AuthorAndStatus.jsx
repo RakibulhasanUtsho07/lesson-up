@@ -23,7 +23,7 @@ export default function AuthorAndStats({ lesson }) {
           Total Lessons: 24
         </div>
 
-        <Link href={`/profile/${lesson.userId}`} className="block">
+        <Link href={`/user-profile/${lesson.userId}`} className="block">
           <Button size="sm" fullWidth className="bg-slate-900 hover:bg-slate-850 border border-slate-800 text-[11px] font-bold text-slate-300 rounded-xl h-9">
             <FiUser /> View Creator Profile
           </Button>

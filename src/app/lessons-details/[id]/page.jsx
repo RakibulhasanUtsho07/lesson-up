@@ -36,6 +36,7 @@ import { getLessonDetails } from "@/lib/data/data";
 export default async function LessonDetailsPage({params}) {
     const {id} = await params
     const lesson = await getLessonDetails(id)
+    console.log(lesson, "recived lessons")
 
     
    

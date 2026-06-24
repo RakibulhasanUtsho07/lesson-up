@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Tooltip, Card } from "@heroui/react";
+import { Button, Link, Tooltip, Card } from "@heroui/react";
 import { 
   FiEye, 
   FiEyeOff, 
@@ -19,7 +19,7 @@ import {
 import { authClient } from "@/lib/auth-client";
 
 export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
-  // ব্যাকএন্ড থেকে যদি অবজেক্ট আকারে { totalLessons: [...] } আসে, তবে সেটাকে হ্যান্ডেল করার সেফটি মেথড
+  
   const initialLessonsArray = Array.isArray(userLessons) 
     ? userLessons 
     : (userLessons?.totalLessons || []);
@@ -29,10 +29,9 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
-  // স্টেট ইনিশিয়াল ভ্যালু হিসেবে অ্যারে ডেটা সেট করা হলো
+  
   const [lessons, setLessons] = useState(initialLessonsArray);
 
-  // যদি প্রপ্স পরিবর্তন হয়, তাহলে স্টেট আপডেট করার জন্য (Optional safely syncing)
   useEffect(() => {
     setLessons(initialLessonsArray);
   }, [userLessons]);
@@ -40,7 +39,7 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [lessonToDelete, setLessonToDelete] = useState(null);
 
-  // ভিজিবিলিটি টগল ফাংশন ফিক্সড
+ 
   const toggleVisibility = (id) => {
     setLessons(prevLessons => 
       prevLessons.map(lesson => 
@@ -51,7 +50,6 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
     );
   };
 
-  // অ্যাক্সেস লেভেল টগল ফাংশন ফিক্সড
   const toggleAccessLevel = (id) => {
     if (isFreeUser) return; 
     setLessons(prevLessons => 
@@ -68,7 +66,7 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
     setIsDeleteModalOpen(true);
   };
 
-  // ডিলিট ফাংশন ফিক্সড
+
   const executeDelete = () => {
     setLessons(prevLessons => prevLessons.filter(l => l._id !== lessonToDelete._id && l.id !== lessonToDelete.id));
     setIsDeleteModalOpen(false);
@@ -89,7 +87,7 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
       <div className="absolute top-10 right-10 size-96 bg-cyan-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-10 left-10 size-96 bg-orange-500/5 rounded-full blur-[120px] pointer-events-none" />
 
-      {/* 🌟 হেডার সেকশন */}
+ 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-900 pb-6 relative z-10">
         <div>
           <h1 className="text-3xl font-black tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-500 bg-clip-text text-transparent">
@@ -127,6 +125,7 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
             <tbody className="divide-y divide-slate-900/60 text-sm font-medium">
               {
                 lessons?.map((lesson, ind) => {
+                  console.log(lesson, "count lesson")
                   // এখানে কারেন্ট আইডি নির্ধারণ করা হলো যাতে ক্র্যাশ না করে
                   const currentId = lesson._id || lesson.id;
 
@@ -153,10 +152,10 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-4 text-xs text-slate-400">
                           <span className="flex items-center gap-1.5 bg-slate-950/40 border border-slate-900 px-2.5 py-1 rounded-lg text-rose-400">
-                            <FiHeart className="fill-rose-500/10" /> {lesson.reactions || 0}
+                            <FiHeart className="fill-rose-500/10" /> {lesson.likes || 0}
                           </span>
                           <span className="flex items-center gap-1.5 bg-slate-950/40 border border-slate-900 px-2.5 py-1 rounded-lg text-amber-400">
-                            <FiBookmark className="fill-amber-500/10" /> {lesson.saves || 0}
+                            <FiBookmark className="fill-amber-500/10" /> {lesson.favorites || 0}
                           </span>
                         </div>
                       </td>
@@ -213,11 +212,11 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
                             </button>
                           </Tooltip>
 
-                          <Tooltip content="Edit Lesson" className="bg-slate-900 text-slate-200 text-xs rounded-lg">
+                          <Link href={`/dashboard/my-lessons/update-lesson/${lesson._id}`}  content="Edit Lesson" className="bg-slate-900 text-slate-200 text-xs rounded-lg">
                             <button className="p-2 bg-slate-950 border border-slate-900 text-slate-400 hover:text-amber-400 rounded-xl transition-all hover:scale-105">
                               <FiEdit2 className="size-4" />
                             </button>
-                          </Tooltip>
+                          </Link>
 
                           <Tooltip content="Delete Permanently" className="bg-slate-900 text-slate-200 text-xs rounded-lg">
                             <button 

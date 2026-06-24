@@ -4,10 +4,11 @@ import React from 'react';
 import Link from 'next/link';
 import { FcGoogle } from 'react-icons/fc';
 import { HiOutlineUser, HiOutlineMail, HiOutlineLockClosed, HiOutlinePhotograph } from 'react-icons/hi';
-import { authClient } from "@/lib/auth-client";
+
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast"; // assuming you are using react-hot-toast
 import { redirect } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
 
 function RegisterPage() {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -25,9 +26,7 @@ function RegisterPage() {
         image: photo,
         callbackURL: "/",
         // যদি আপনার authClient (যেমন Better Auth বা কাস্টম কোনো সেটআপ) অতিরিক্ত মেটাডেটা বা কাস্টম ফিল্ড সাপোর্ট করে:
-       additionalFields: {
-            plan: "Free"
-        }
+      
     });
 
     // ২. যদি কোনো এরর আসে, তাহলে টোস্ট দেখাবে এবং ফাংশন এখানেই থেমে যাবে

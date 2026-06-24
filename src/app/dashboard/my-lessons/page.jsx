@@ -22,7 +22,7 @@ const  MyLessonsPage =async() =>{
     const userId = user?.id || user?._id;
   const userLessons = await userPostedLessons(userId)
   console.log(user, "hello")
-  console.log(userLessons)
+  console.log(userLessons,"user lessons")
   return (
     <div>
         <MyLessonsSection userLessons={userLessons}  />
