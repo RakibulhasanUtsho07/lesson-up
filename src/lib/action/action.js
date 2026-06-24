@@ -87,3 +87,17 @@ export const getLessonsCount = async () => {
     return { totalLessons: 0 };
   }
 };
+export const getTotalUserCount = async()=>{
+  try{
+    const res = await fetch(`http://localhost:5000/lesson-up/user/count`)
+    if (!res.ok) {
+      throw new Error(`Server responded with status: ${res.status}`);
+    }
+    const data = res.json()
+    return data
+
+  }catch(error){
+    console.error("Error in countUserLessons fetch:", error);
+    return { totalLessons: 0 };
+  }
+}

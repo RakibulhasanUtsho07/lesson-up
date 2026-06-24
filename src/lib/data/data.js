@@ -87,3 +87,21 @@ export const countUserFavoriteLessons = async (userId) => {
     return { totalLessons: 0 };
   }
 };
+export const getUsers = async () => {
+  try {
+    const res = await fetch(`http://localhost:5000/users`, {
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server responded with status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+   
+    console.error("Error in getUsers:", error); 
+    return []; 
+  }
+};
