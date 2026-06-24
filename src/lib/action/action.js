@@ -129,3 +129,25 @@ export const updateUserPlan = async (userId) => {
     throw error;
   }
 }
+export const setFeatured = async (lessonId) => {
+  console.log(lessonId, "hi lesson Id")
+  try {
+    const res = await fetch(`http://localhost:5000/lesson/feature/${lessonId}`, {
+      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server responded with status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error in setFeatured fetch:", error);
+    throw error;
+  }
+};
