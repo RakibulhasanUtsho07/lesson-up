@@ -16,19 +16,25 @@ import {
 } from "react-icons/fi";
 import { postLesson } from "@/lib/action/action";
 import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
 
 export default function AddLessonForm({ userPlan = "Free" }) {
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
+  if (!user || user?.role !== 'user') {
+      redirect("/");
+    }
+  const isFreeUser = userPlan === user?.plan;
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
   const [tone, setTone] = useState("");
   const [image, setImage] = useState("");
-  const [accessLevel, setAccessLevel] = useState("Free");
+  const [accessLevel, setAccessLevel] = useState(userPlan);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isFreeUser = userPlan === "Free";
-  const { data: session, isPending } = authClient.useSession();
-  const user = session?.user;
+  
+  
  
   const categories = [
     { label: "Personal Growth", value: "personal-growth" },
@@ -59,7 +65,10 @@ export default function AddLessonForm({ userPlan = "Free" }) {
       name: user?.name,
       userId: user?.id || user?._id,
       userImage: user?.image || "",
-      date: new Date()
+      date: new Date(),
+      likes: 0,
+      favorites: 0,
+      isFeatured: false,
     };
     const data = await postLesson(formData);
 

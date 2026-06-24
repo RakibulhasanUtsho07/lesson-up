@@ -13,6 +13,7 @@ import {
   FiTerminal
 } from "react-icons/fi";
 import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
 
 // 🛡️ সিস্টেম সিকিউরিটি লগ ডেটা
 const securityLogs = [
@@ -24,6 +25,9 @@ const securityLogs = [
 export default function AdminProfilePage() {
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
+  if (!user || user?.role !== 'admin') {
+      redirect("/");
+    }
 
   // সেটিংস স্টেট
   const [maintenanceMode, setMaintenanceMode] = useState(false);

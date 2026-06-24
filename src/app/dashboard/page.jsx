@@ -12,22 +12,26 @@ import {
 import {Link} from "@heroui/react";
 import { FiTrendingUp } from "react-icons/fi";
 
-import { authClient } from "@/lib/auth-client"; 
+ 
 import { countUserFavoriteLessons, countUserLessons } from "@/lib/data/data";
-import { headers } from "next/headers";
+
+import { getSessionData } from "@/lib/core/session";
+import { redirect } from "next/navigation";
 
 export default async function DashboardHomePage() {
   // ✅ কুকি ও হেডার সহ সেফলি সেশন রিড করা
-  const session = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers()
+   const user = await getSessionData();
+  
+    
+    if (!user || user?.role !== 'user') {
+      redirect("/");
     }
-  });
+
   
   // 🔍 পুরো সেশন ডাটা টার্মিনালে চেক করার জন্য
-  console.log("=== DEBUG SESSION ===", session);
+ 
 
- const user = session?.data?.user; 
+
   
  
   const userId = user?.id || session?.data?.session?.userId;

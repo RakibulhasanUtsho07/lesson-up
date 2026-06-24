@@ -10,14 +10,10 @@ const nextConfig = {
       },
     ],
   },
-  // async rewrites() {
-  //   return [
-  //     {
-  //       source: '/api/auth/:path*',
-  //       destination: 'http://localhost:5000/api/auth/:path*', // আপনার ব্যাকএন্ড এন্ডপয়েন্ট
-  //     },
-  //   ];
-  // },
+ matcher: [
+    // এই রাউটগুলো ছাড়া বাকি সব ড্যাশবোর্ড রাউট মিডলওয়্যার ট্র্যাক করবে
+    '/((?!api|_next/static|_next/image|favicon.ico|public-lessons).*)',
+  ],
  
 };
 

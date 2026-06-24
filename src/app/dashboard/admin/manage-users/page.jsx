@@ -1,11 +1,16 @@
 import AdminManageUsersSection from '@/components/shared/AdminManageUsersSection';
+import { getSessionData } from '@/lib/core/session';
 import { getUsers } from '@/lib/data/data';
+import { redirect } from 'next/navigation';
 import React from 'react';
 import { HiUsers, HiShieldCheck, HiCreditCard } from "react-icons/hi2";
 
 const AdminManageUserPage = async () => {
   const users = await getUsers() || [];
-
+ const user = await getSessionData()
+  if (!user || user?.role !== 'admin') {
+        redirect("/");
+      }
   const totalUsers = users.length;
   const totalAdmins = users.filter(user => user.role === 'admin').length;
   const premiumUsers = users.filter(user => user.plan === 'Premium').length;

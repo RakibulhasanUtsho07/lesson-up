@@ -2,9 +2,13 @@ import { stripe } from '@/lib/stripe'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { FiCheckCircle, FiArrowRight, FiMail, FiHelpCircle } from 'react-icons/fi'
+import { getSessionData } from '@/lib/core/session'
+import { updateUserPlan } from '@/lib/action/action'
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams
+  const user = await getSessionData()
+  const userId = user?.id || user?._id
 
   if (!session_id)
     throw new Error('Please provide a valid session_id (`cs_test_...`)')
@@ -19,6 +23,9 @@ export default async function Success({ searchParams }) {
   
   if (status === 'open') {
     return redirect('/')
+  }
+  if(status === 'complete'){
+    await updateUserPlan(userId)
   }
 
   return (

@@ -2,6 +2,7 @@ import React from 'react';
 import PublicLesson from '@/components/shared/PublicLesson';
 import { getPublicLessons } from '@/lib/data/data';
 import { FiGrid, FiCompass, FiSearch, FiSliders } from 'react-icons/fi';
+import { getSessionData } from '@/lib/core/session';
 
 // রেসপনসিভ এবং স্টাইলিশ ক্যাটাগরি ট্যাগস (আপনার ক্রিয়েট লেসন পেজের সাথে মিল রেখে)
 const quickFilters = [
@@ -14,6 +15,7 @@ const quickFilters = [
 
 async function PublicLessonsPage() {
   const publicLessons = await getPublicLessons() || [];
+  const user =await getSessionData()
 
   return (
     <div className="w-full min-h-screen bg-slate-950 text-slate-100">
@@ -92,7 +94,7 @@ async function PublicLessonsPage() {
                 className="group transform hover:-translate-y-1 transition-all duration-300"
               >
                 
-                <PublicLesson lesson={lesson} />
+                <PublicLesson lesson={lesson} user={user} />
               </div>
             ))}
           </div>

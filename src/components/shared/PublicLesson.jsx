@@ -14,7 +14,7 @@ import {
 // ফিল্ড হার্ট অ্যানিমেশনের জন্য FaHeart ইমপোর্ট করা হলো
 import { FaHeart } from "react-icons/fa"; 
 
-function PublicLesson({ lesson }) {
+function PublicLesson({ lesson, user }) {
   // ডেটা ডিস্ট্রাকচারিং
   const {
     _id,
@@ -63,7 +63,7 @@ function PublicLesson({ lesson }) {
             ? "bg-gradient-to-r from-amber-500 to-orange-500 border-amber-400 text-white shadow-[0_0_15px_rgba(245,158,11,0.4)]"
             : "bg-slate-950/80 border-slate-800 text-cyan-400"
         }`}>
-          {accessLevel}
+          {lesson?.accessLevel}
         </span>
 
         {/* ক্যাটাগরি ও ইমোশনাল টোন ব্যাজ */}
@@ -109,36 +109,7 @@ function PublicLesson({ lesson }) {
           <div className="flex items-center gap-1 shrink-0">
             
             {/* লাইক বাটন (বাগ-ফ্রি এবং স্মুথ অ্যানিমেটেড) */}
-            <Tooltip content={liked ? "Unlike" : "Like"} className="bg-slate-950 border border-slate-800 text-xs text-slate-300">
-              <button 
-                onClick={handleLike}
-                type="button"
-                className={`p-2 flex items-center gap-1.5 rounded-lg hover:bg-slate-800/50 transition-all active:scale-90 ${
-                  liked ? "text-rose-500" : "text-slate-500 hover:text-rose-400"
-                }`}
-              >
-                {liked ? (
-                  <FaHeart className="text-sm scale-110 text-rose-500 animate-pulse" />
-                ) : (
-                  <FiHeart className="text-sm" />
-                )}
-                <span className="text-[11px] font-bold select-none">{likeCount}</span>
-              </button>
-            </Tooltip>
-
-            {/* বুকমার্ক বাটন */}
-            <Tooltip content="Save Lesson" className="bg-slate-950 border border-slate-800 text-xs text-slate-300">
-              <button type="button" className="p-2 text-slate-500 hover:text-cyan-400 rounded-lg hover:bg-slate-800/50 transition-colors">
-                <FiBookmark className="text-sm" />
-              </button>
-            </Tooltip>
             
-            
-            <Tooltip content="Share" className="bg-slate-950 border border-slate-800 text-xs text-slate-300">
-              <button type="button" className="p-2 text-slate-500 hover:text-fuchsia-400 rounded-lg hover:bg-slate-800/50 transition-colors">
-                <FiShare2 className="text-sm" />
-              </button>
-            </Tooltip>
 
             {/* Read Insights মডার্ন বাটন */}
             <Link

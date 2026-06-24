@@ -1,13 +1,18 @@
 "use server";
 
 export const postLesson = async (formData) => {
-  const res = await fetch("http://localhost:5000/lessons", {
+  try{
+    const res = await fetch("http://localhost:5000/lessons", {
     method: "POST",
     headers: {
       "content-type": "application/json",
     },
     body: JSON.stringify(formData)
+   
   });
+  }catch(error){
+
+  }
 };
 
 export const userPostedLessons = async (userId) => {
@@ -89,7 +94,7 @@ export const getLessonsCount = async () => {
 };
 export const getTotalUserCount = async()=>{
   try{
-    const res = await fetch(`http://localhost:5000/lesson-up/user/count`)
+    const res = await fetch(`http://localhost:5000/lesson-up/user/count`,)
     if (!res.ok) {
       throw new Error(`Server responded with status: ${res.status}`);
     }
@@ -99,5 +104,28 @@ export const getTotalUserCount = async()=>{
   }catch(error){
     console.error("Error in countUserLessons fetch:", error);
     return { totalLessons: 0 };
+  }
+}
+export const updateUserPlan = async (userId) => {
+  try {
+    // ⚡ এখানে স্পষ্ট করে method: 'PATCH' উল্লেখ করতে হবে
+    const res = await fetch(`http://localhost:5000/user/update-plan/${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // যদি বডিতেও আইডি পাঠাতে চান (অপশনাল, কারণ ইউআরএল-এই আইডি আছে)
+      body: JSON.stringify({ userId }) 
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server responded with status: ${res.status}`);
+    }
+
+    const data = await res.json(); // এখানে await যুক্ত করা নিশ্চিত করুন
+    return data;
+  } catch (error) {
+    console.error("Error in updateUserPlan fetch:", error);
+    throw error;
   }
 }

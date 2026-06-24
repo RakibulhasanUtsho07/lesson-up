@@ -37,9 +37,9 @@ export default function AppNavbar() {
     };
 
     return (
-       
+
         <nav className="sticky top-0 z-50 w-full border-b border-white/[0.06] bg-gradient-to-r from-[#0a0b10]/90 via-[#11131c]/85 to-[#0a0b10]/90 backdrop-blur-xl backdrop-saturate-150 shadow-[0_4px_30px_rgba(0,0,0,0.4)]">
-           
+
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-blue-500/[0.04] via-transparent to-transparent pointer-events-none" />
 
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
@@ -71,33 +71,27 @@ export default function AppNavbar() {
 
                     {/* 2. Desktop Center Links */}
                     <div className="hidden md:flex items-center gap-6">
-                       {!isLoggedIn && (
-                        <>
-                         <Link href="/" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
-                            Home
-                        </Link>
-                        </>
-                       )}
+                        {!isLoggedIn && (
+                            <>
+                                <Link href="/" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
+                                    Home
+                                </Link>
+                            </>
+                        )}
                         {
                             isLoggedIn && (
                                 <>
-                                <Link href="/dashboard" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
-                                Dashboard
-                                </Link>
+                                    <Link href="/" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
+                                        Home
+                                    </Link>
+                                    <Link href={`${user?.role !== "admin"? "/dashboard": "/dashboard/admin"}`} className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
+                                        Dashboard
+                                    </Link>
                                 </>
                             )
                         }
 
-                        {/* {isLoggedIn && (
-                            <>
-                                <Link href="/dashboard/post-lesson" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
-                                    Post Lesson
-                                </Link>
-                                <Link href="/dashboard/my-lessons" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
-                                    My Lessons
-                                </Link>
-                            </>
-                        )} */}
+
 
                         <Link href="/public-lessons" className="text-sm font-medium text-slate-300 hover:text-white transition-colors duration-200">
                             Public Lessons
@@ -183,7 +177,7 @@ export default function AppNavbar() {
                     <Link href="/" className="text-base font-medium py-2 text-slate-200">Home</Link>
                     {isLoggedIn && (
                         <>
-                            <Link href="/dashboard/add-lesson" className="text-base font-medium py-2 text-slate-200">Add Lesson</Link>
+                            <Link href="/dashboard/post-lesson" className="text-base font-medium py-2 text-slate-200">Add Lesson</Link>
                             <Link href="/dashboard/my-lessons" className="text-base font-medium py-2 text-slate-200">My Lessons</Link>
                         </>
                     )}

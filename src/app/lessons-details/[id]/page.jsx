@@ -40,16 +40,7 @@ export default async function LessonDetailsPage({params}) {
 
     
    
-//   const router = useRouter();
- 
 
-  
-//   const isUserPremium = false; 
-//   const isLocked = mockLesson.accessLevel === "Free" && !isUserPremium;
-
-  
-//   const [likes, setLikes] = useState(mockLesson.likes);
-//   const [favorites, setFavorites] = useState(mockLesson.favorites);
 
   return (
     <div className="min-h-screen bg-[#030712] text-slate-100 p-4 sm:p-8 relative">

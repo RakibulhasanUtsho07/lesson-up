@@ -3,12 +3,15 @@ import { headers } from 'next/headers'
 
 import { stripe } from '../../../lib/stripe'
 import { getSessionData } from '@/lib/core/session'
+import toast from 'react-hot-toast'
 
 export async function POST() {
   try {
     const headersList = await headers()
     const origin = headersList.get('origin')
     const user = await getSessionData()
+    const userId = user?.id || user?._id
+
    console.log(user," user")
 
     // Create Checkout Sessions from body params.
@@ -27,6 +30,7 @@ export async function POST() {
       mode: 'subscription',
       success_url: `${origin}/plan/success?session_id={CHECKOUT_SESSION_ID}`,
     });
+   
     return NextResponse.redirect(session.url, 303)
   } catch (err) {
     return NextResponse.json(

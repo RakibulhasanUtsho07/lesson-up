@@ -55,7 +55,7 @@ export default function WhyLearningMatters() {
       
       {/* হেডিং সেকশন (সাদা ব্যাকগ্রাউন্ডে স্পষ্ট দেখার জন্য text-slate-900 ও text-slate-600 ব্যবহার করা হয়েছে) */}
       <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-        <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900">
+        <h2 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
           Why Learning From Life <span className="bg-gradient-to-r from-cyan-500 via-indigo-500 to-amber-500 bg-clip-text text-transparent">Matters</span>
         </h2>
         <p className="text-sm sm:text-base text-slate-600 font-medium max-w-xl mx-auto">

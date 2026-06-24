@@ -1,7 +1,16 @@
 import React from "react";
 import DashboardHomePageSidebar from "@/components/shared/DashboardHomePageSidebar"; // আপনার সাইডবারের পাথ
+import { redirect } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 
-export default function DashboardLayout({ children }) {
+
+export default async  function DashboardLayout({ children }) {
+  //  const user = await getSessionData();
+  
+    
+  //   if (!user || user?.role !== 'user') {
+  //     redirect("/");
+  //   }
   return (
     
     <div className="flex h-screen w-full bg-[#030712] overflow-hidden">
@@ -17,7 +26,7 @@ export default function DashboardLayout({ children }) {
           {children}
         </div>
       </main>
-
+    <Toaster />
     </div>
   );
 }
