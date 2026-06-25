@@ -10,10 +10,10 @@ const nextConfig = {
       },
     ],
   },
- matcher: [
-    // এই রাউটগুলো ছাড়া বাকি সব ড্যাশবোর্ড রাউট মিডলওয়্যার ট্র্যাক করবে
-    '/((?!api|_next/static|_next/image|favicon.ico|public-lessons).*)',
-  ],
+//  matcher: [
+   
+//     '/((?!api|_next/static|_next/image|favicon.ico|public-lessons).*)',
+//   ],
  
 };
 

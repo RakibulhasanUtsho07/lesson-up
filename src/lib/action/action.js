@@ -151,3 +151,23 @@ export const setFeatured = async (lessonId) => {
     throw error;
   }
 };
+export const adminDeleteLesson = async (lessonId) => {
+  try {
+    const res = await fetch(`http://localhost:5000/lessons/delete/${lessonId}`, {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server responded with status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error in adminDeleteLesson fetch:", error);
+    throw error;
+  }
+};

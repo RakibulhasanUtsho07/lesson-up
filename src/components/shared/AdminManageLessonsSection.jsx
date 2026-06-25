@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, Avatar, Tooltip } from "@heroui/react";
+import { Card, Avatar, Tooltip, Link } from "@heroui/react";
 import {
   FiSearch,
-  FiTrash2,
-  FiAlertTriangle,
+
   FiCheckCircle,
   FiEye,
   FiFlag,
@@ -14,7 +13,9 @@ import {
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { FaStar } from "react-icons/fa";
-import { setFeatured } from "@/lib/action/action"; // আপনার সঠিক পাথ দিন
+import { adminDeleteLesson, setFeatured } from "@/lib/action/action"; // আপনার সঠিক পাথ দিন
+
+import UniqueSystemAlertDialog from "./AlearDialog";
 
 export default function AdminManageLessonsSection({ allLessons }) {
   const router = useRouter();
@@ -55,6 +56,33 @@ export default function AdminManageLessonsSection({ allLessons }) {
       toast.error("Something went wrong!");
     }
   };
+ // ওপরে নিশ্চিত করুন adminDeleteLesson ইমপোর্ট করা আছে
+
+const handleDelete = async (lessonId) => {
+  if (!lessonId) return;
+
+ 
+  // if (!confirm("Are you sure you want to delete this lesson permanently?")) return;
+  
+  try {
+    // ⚡ ফিক্স ৩: adminDeleteLesson এর ভেতর lessonId পাস করা হলো
+    const data = await adminDeleteLesson(lessonId);
+    
+    if (data?.success) {
+      toast.success("Lesson deleted successfully! 🗑️");
+      
+     
+      setLessons((prevLessons) => prevLessons.filter((l) => l._id !== lessonId));
+      
+      router.refresh(); // সার্ভার ডাটা সিঙ্ক করার জন্য
+    } else {
+      toast.error(data?.message || "Failed to delete content.");
+    }
+  } catch (error) {
+    console.error("Frontend Error:", error);
+    toast.error("Something went wrong!");
+  }
+};
 
   // ফিল্টারিং ও সার্চ লজিক
   const filteredLessons = lessons.filter(lesson => {
@@ -122,6 +150,7 @@ export default function AdminManageLessonsSection({ allLessons }) {
                 <th className="py-4 px-4">Author Info</th>
                 <th className="py-4 px-4">Safety Status</th>
                 <th className="py-4 px-6 text-center">Featured Status</th>
+                <th className="py-4 px-6 text-right">Moderation Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-900/40 text-xs font-medium text-slate-300">
@@ -158,8 +187,8 @@ export default function AdminManageLessonsSection({ allLessons }) {
                       <button
                         onClick={() => handleFeatured(lesson?._id)}
                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-300 border ${lesson?.isFeatured
-                            ? "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20 shadow-lg shadow-amber-500/5"
-                            : "bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200"
+                          ? "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20 shadow-lg shadow-amber-500/5"
+                          : "bg-slate-900 text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-200"
                           }`}
                       >
                         {lesson?.isFeatured ? (
@@ -169,6 +198,62 @@ export default function AdminManageLessonsSection({ allLessons }) {
                         )}
                         <span>{lesson?.isFeatured ? "Featured" : "Make Featured"}</span>
                       </button>
+                    </td>
+                    <td className="py-4 px-6 text-right">
+
+                      <div className="flex items-center justify-end gap-2.5">
+
+
+
+                        {/* কন্টেন্ট রিভিউ বা ভিউ বাটন */}
+
+                        <Link href={`/dashboard/admin/lessons-details/${lesson?._id}`}>
+
+                          <Tooltip content="Quick View" className="bg-slate-950 text-xs text-slate-300 border border-slate-800">
+
+                            <button className="p-2 bg-slate-950 border border-slate-900 text-slate-400 hover:text-cyan-400 rounded-xl transition-all">
+
+                              <FiEye className="size-3.5" />
+
+                            </button>
+
+                          </Tooltip>
+
+                        </Link>
+
+
+
+                        {/* যদি রিপোর্টেড হয় তবে ক্লিয়ার/অ্যাপ্রুভ করার বাটন */}
+
+                        {isReported && (
+
+                          <Tooltip content="Keep & Dismiss Reports" className="bg-slate-950 text-xs text-emerald-400 border border-emerald-950">
+
+                            <button
+
+                              onClick={() => handleApprove(lesson._id)}
+
+                              className="p-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 rounded-xl transition-all"
+
+                            >                             
+                             <FiCheckCircle className="size-3.5" />
+
+                            </button>
+
+                          </Tooltip>
+                        )}
+                        {/* পার্মানেন্ট ডিলিট বাটন */}
+
+                        <Tooltip content="Force Delete Content" className="bg-slate-950 text-xs text-rose-400 border border-rose-950">
+                            <UniqueSystemAlertDialog handleDelete={handleDelete} lesson={lesson}/>
+                          {/* <button
+                            onClick={() => handleDelete(lesson._id)}
+                            className="p-2 bg-slate-950 border border-slate-900 text-slate-500 hover:text-rose-400 hover:border-rose-500/20 rounded-xl transition-all"
+                          >
+                            <FiTrash2 className="size-3.5" />
+                          </button> */}
+                        </Tooltip>
+                      </div>
                     </td>
                   </tr>
                 );
