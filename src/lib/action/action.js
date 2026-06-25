@@ -1,24 +1,23 @@
 "use server";
 
 export const postLesson = async (formData) => {
-  try{
+  try {
     const res = await fetch("http://localhost:5000/lessons", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify(formData)
-   
-  });
-  }catch(error){
-
-  }
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+  } catch (error) {}
 };
 
 export const userPostedLessons = async (userId) => {
   try {
     if (!userId || userId === "undefined") {
-      console.warn("⚠️ userPostedLessons aborted: userId is missing or undefined");
+      console.warn(
+        "⚠️ userPostedLessons aborted: userId is missing or undefined",
+      );
       return [];
     }
 
@@ -31,17 +30,16 @@ export const userPostedLessons = async (userId) => {
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 0 } 
+      next: { revalidate: 0 },
     });
 
     if (!res.ok) {
       console.error(`❌ Backend responded with status: ${res.status}`);
-      return []; 
+      return [];
     }
 
     const data = await res.json();
-    return data; 
-
+    return data;
   } catch (error) {
     console.error("Detailed Error in userPostedLessons:", error.message);
     return [];
@@ -55,7 +53,7 @@ export const postLikedData = async (likedData) => {
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify(likedData)
+    body: JSON.stringify(likedData),
   });
 };
 
@@ -66,7 +64,7 @@ export const postSavedData = async (savedData) => {
     headers: {
       "content-type": "application/json",
     },
-    body: JSON.stringify(savedData)
+    body: JSON.stringify(savedData),
   });
 };
 
@@ -92,31 +90,33 @@ export const getLessonsCount = async () => {
     return { totalLessons: 0 };
   }
 };
-export const getTotalUserCount = async()=>{
-  try{
-    const res = await fetch(`http://localhost:5000/lesson-up/user/count`,)
+export const getTotalUserCount = async () => {
+  try {
+    const res = await fetch(`http://localhost:5000/lesson-up/user/count`);
     if (!res.ok) {
       throw new Error(`Server responded with status: ${res.status}`);
     }
-    const data = res.json()
-    return data
-
-  }catch(error){
+    const data = res.json();
+    return data;
+  } catch (error) {
     console.error("Error in countUserLessons fetch:", error);
     return { totalLessons: 0 };
   }
-}
+};
 export const updateUserPlan = async (userId) => {
   try {
     // ⚡ এখানে স্পষ্ট করে method: 'PATCH' উল্লেখ করতে হবে
-    const res = await fetch(`http://localhost:5000/user/update-plan/${userId}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
+    const res = await fetch(
+      `http://localhost:5000/user/update-plan/${userId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // যদি বডিতেও আইডি পাঠাতে চান (অপশনাল, কারণ ইউআরএল-এই আইডি আছে)
+        body: JSON.stringify({ userId }),
       },
-      // যদি বডিতেও আইডি পাঠাতে চান (অপশনাল, কারণ ইউআরএল-এই আইডি আছে)
-      body: JSON.stringify({ userId }) 
-    });
+    );
 
     if (!res.ok) {
       throw new Error(`Server responded with status: ${res.status}`);
@@ -128,17 +128,19 @@ export const updateUserPlan = async (userId) => {
     console.error("Error in updateUserPlan fetch:", error);
     throw error;
   }
-}
+};
 export const setFeatured = async (lessonId) => {
-  console.log(lessonId, "hi lesson Id")
+  console.log(lessonId, "hi lesson Id");
   try {
-    const res = await fetch(`http://localhost:5000/lesson/feature/${lessonId}`, {
-      method: "PATCH",
-      headers: {
-        'Content-Type': 'application/json',
+    const res = await fetch(
+      `http://localhost:5000/lesson/feature/${lessonId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-      
-    });
+    );
 
     if (!res.ok) {
       throw new Error(`Server responded with status: ${res.status}`);
@@ -153,12 +155,15 @@ export const setFeatured = async (lessonId) => {
 };
 export const adminDeleteLesson = async (lessonId) => {
   try {
-    const res = await fetch(`http://localhost:5000/lessons/delete/${lessonId}`, {
-      method: "DELETE",
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
+    const res = await fetch(
+      `http://localhost:5000/lessons/delete/${lessonId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
 
     if (!res.ok) {
       throw new Error(`Server responded with status: ${res.status}`);
@@ -168,6 +173,54 @@ export const adminDeleteLesson = async (lessonId) => {
     return data;
   } catch (error) {
     console.error("Error in adminDeleteLesson fetch:", error);
+    throw error;
+  }
+};
+export const handleReport = async (reportedData) => {
+  try {
+    const res = await fetch(`http://localhost:5000/lessons/report`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(reportedData),
+    });
+
+    const data = await res.json(); // ✅ always parse first
+
+    if (!res.ok) {
+      throw new Error(
+        data?.message || `Server responded with status: ${res.status}`,
+      );
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error in handleReport fetch:", error);
+    throw error;
+  }
+};
+
+export const adminHandleReports = async (reportedId) => {
+  try {
+    const res = await fetch(
+      `http://localhost:5000/lessons/delete/report/${reportedId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+    if (!res.ok) {
+      throw new Error(
+        data?.message || `Server responded with status: ${res.status}`,
+      );
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error in handleReport fetch:", error);
     throw error;
   }
 };

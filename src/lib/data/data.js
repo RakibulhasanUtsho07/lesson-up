@@ -100,8 +100,22 @@ export const getUsers = async () => {
     const data = await res.json();
     return data;
   } catch (error) {
-   
-    console.error("Error in getUsers:", error); 
-    return []; 
+    console.error("Error in getUsers:", error);
+    return [];
+  }
+};
+export const getReportedData = async () => {
+  try {
+    const res = await fetch("http://localhost:5000/lessons/report/get", {
+      cache: "no-store",
+    });
+    const data = await res.json();
+    return data;
+    if (!res.ok) {
+      throw new Error(`Server responded with status: ${res.status}`);
+    }
+  } catch (error) {
+    console.error("Error in getUsers:", error);
+    return [];
   }
 };

@@ -4,7 +4,7 @@ import { Button } from "@heroui/react";
 import { FiHeart, FiBookmark, FiFlag, FiX } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth-client";
-import { postLikedData, postSavedData } from "@/lib/action/action";
+import { handleReport, postLikedData, postSavedData } from "@/lib/action/action";
 
 export default function InteractionBar({ lesson }) {
   const { _id, likes = 0, favorites = 0 } = lesson || {};
@@ -38,6 +38,7 @@ export default function InteractionBar({ lesson }) {
         userName: user?.name,
         userImage: user?.image || "",
         lessonId: lesson?.id || _id,
+        reportReason : reportReason
       };
 
       try {
@@ -82,12 +83,37 @@ export default function InteractionBar({ lesson }) {
     }
   }
 };
-
-  const handleReportSubmit = (e) => {
-    e.preventDefault();
-    toast.success("Incident logged. Content moderation team notified.");
-    setIsReportOpen(false);
+const handleReportSubmit = async (e) => {
+  if (e && e.preventDefault) e.preventDefault();
+  
+  const reportedData = {
+    lessonId: lesson?._id || lesson?.id,
+    reportReason:reportReason,
+    title: lesson?.title || "",
+    tone: lesson?.tone || "",
+    reporterId: user?.id || user?._id,
+    createdAt: new Date(), 
+    userName: user?.name,
+    userId: user?.id || user?._id,
   };
+
+  try {
+    const data = await handleReport(reportedData);
+    
+    // ✅ Fix: check data.success instead of data.acknowledged
+    if (data?.success) {
+      toast.success("Incident logged. Content moderation team notified. 🛡️");
+      if (typeof setIsReportOpen === "function") {
+        setIsReportOpen(false);
+      }
+    } else {
+      toast.error(data?.message || "Failed to submit report.");
+    }
+  } catch (error) {
+    console.error("Report Submission Error:", error);
+    toast.error(error.message || "Something went wrong while sending the report.");
+  }
+};
 
   return (
     <div className="flex items-center justify-between p-4 bg-slate-950/20 border border-slate-900 rounded-xl">
