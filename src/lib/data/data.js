@@ -1,3 +1,13 @@
+import { authHeader } from "@/lib/core/sarver";
+const getValidHeader = async () => {
+  const headers = await authHeader();
+  console.log(headers, "headers")
+  
+  if (!headers.authorization || headers.authorization.includes("undefined")) {
+    console.warn("⚠️ Warning: Authorization token is undefined in Server Action!");
+  }
+  return headers;
+};
 export const getPublicLessons = async () => {
   const res = await fetch("http://localhost:5000/lessons");
   const data = await res.json();
@@ -6,6 +16,7 @@ export const getPublicLessons = async () => {
 export const getLessonDetails = async (id) => {
   const res = await fetch(`http://localhost:5000/lessons/${id}`, {
     cache: "no-store",
+    headers: await getValidHeader()
   });
 
   if (!res.ok) {
@@ -34,6 +45,7 @@ export const getFavoriteLessons = async (userId) => {
 
     const res = await fetch(`http://localhost:5000/savePosts/${userId}`, {
       cache: "no-store",
+      headers: await getValidHeader()
     });
 
     console.log(
@@ -56,6 +68,7 @@ export const countUserLessons = async (userId) => {
   try {
     const res = await fetch(`http://localhost:5000/lessons/count/${userId}`, {
       cache: "no-store",
+      headers: await getValidHeader()
     });
 
     if (!res.ok) {
@@ -74,6 +87,7 @@ export const countUserFavoriteLessons = async (userId) => {
   try {
     const res = await fetch(`http://localhost:5000/savePosts/count/${userId}`, {
       cache: "no-store",
+      headers: await getValidHeader()
     });
 
     if (!res.ok) {
@@ -91,6 +105,7 @@ export const getUsers = async () => {
   try {
     const res = await fetch(`http://localhost:5000/users`, {
       cache: "no-store",
+      headers: await authHeader()
     });
 
     if (!res.ok) {
@@ -108,6 +123,7 @@ export const getReportedData = async () => {
   try {
     const res = await fetch("http://localhost:5000/lessons/report/get", {
       cache: "no-store",
+      headers: await getValidHeader()
     });
     const data = await res.json();
     return data;
@@ -123,7 +139,9 @@ export const getReportsCount = async () => {
   try {
     // ⚡ ফিক্স ১: ইউআরএল স্ট্রিং থেকে অতিরিক্ত কোটেশন এবং ডাবল স্ল্যাশ (//) মুছে ফেলা হলো
     const res = await fetch("http://localhost:5000/lessons/reports/count", {
-      cache: "no-store", // Next.js ক্যাশিং এড়াতে এবং ইনস্ট্যান্ট লাইভ কাউন্ট পেতে
+      cache: "no-store",
+      headers: await getValidHeader()
+       // Next.js ক্যাশিং এড়াতে এবং ইনস্ট্যান্ট লাইভ কাউন্ট পেতে
     });
 
     if (!res.ok) {
@@ -143,6 +161,7 @@ export const getTodayLessonsCount = async () => {
   try {
     const res = await fetch("http://localhost:5000/lessons/today/count", {
       cache: "no-store", 
+      headers: await getValidHeader()
     });
 
     if (!res.ok) {
@@ -160,6 +179,7 @@ export const getMonthlyLessonsCount = async () => {
   try {
     const res = await fetch("http://localhost:5000/lessons/monthly-count", {
       cache: "no-store",
+      headers: await getValidHeader()
     });
     if (!res.ok) throw new Error("Failed to fetch monthly data");
     
@@ -167,6 +187,27 @@ export const getMonthlyLessonsCount = async () => {
     return resData?.success ? resData.data : [];
   } catch (error) {
     console.error("Error:", error);
+    return [];
+  }
+};
+export const getTopContributors = async () => {
+  try {
+    const res = await fetch("http://localhost:5000/users/top-contributors", { cache: "no-store" });
+    const data = await res.json();
+    return data?.success ? data.data : [];
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+export const getMostSavedLessons = async () => {
+  try {
+    const res = await fetch("http://localhost:5000/lessons/most-saved", { cache: "no-store" });
+    const data = await res.json();
+    return data?.success ? data.data : [];
+  } catch (error) {
+    console.error(error);
     return [];
   }
 };

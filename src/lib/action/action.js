@@ -3,9 +3,11 @@
 import { authHeader } from "../core/sarver";
 const getValidHeader = async () => {
   const headers = await authHeader();
-  
+
   if (!headers.authorization || headers.authorization.includes("undefined")) {
-    console.warn("⚠️ Warning: Authorization token is undefined in Server Action!");
+    console.warn(
+      "⚠️ Warning: Authorization token is undefined in Server Action!",
+    );
   }
   return headers;
 };
@@ -16,10 +18,23 @@ export const postLesson = async (formData) => {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        ... await getValidHeader()
+        ...(await getValidHeader()),
       },
       body: JSON.stringify(formData),
     });
+    if (res.ok) {
+      toast.success("Insight shared! Your lesson is now live. 🚀", {
+        style: {
+          background: "#0f172a", // slate-900
+          color: "#e2e8f0", // slate-200
+          border: "1px solid #1e293b", // slate-800
+        },
+        iconTheme: {
+          primary: "#06b6d4", // cyan-500
+          secondary: "#0f172a",
+        },
+      });
+    }
   } catch (error) {}
 };
 
@@ -40,7 +55,7 @@ export const userPostedLessons = async (userId) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        ... await getValidHeader()
+        ...(await getValidHeader()),
       },
       next: { revalidate: 0 },
     });
@@ -64,7 +79,7 @@ export const postLikedData = async (likedData) => {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      ... await getValidHeader()
+      ...(await getValidHeader()),
     },
     body: JSON.stringify(likedData),
   });
@@ -76,16 +91,19 @@ export const postSavedData = async (savedData) => {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      ... await getValidHeader()
+      ...(await getValidHeader()),
     },
     body: JSON.stringify(savedData),
   });
 };
 
-
 export const getLessonsCount = async () => {
   try {
-    const res = await fetch(`http://localhost:5000/lessons/count`);
+    const res = await fetch(`http://localhost:5000/lessons/count`,
+      {
+        headers: await getValidHeader()
+      }
+    );
     if (!res.ok) {
       throw new Error(`Server responded with status: ${res.status}`);
     }
@@ -118,7 +136,7 @@ export const updateUserPlan = async (userId) => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          ... await getValidHeader()
+          ...(await getValidHeader()),
         },
         // যদি বডিতেও আইডি পাঠাতে চান (অপশনাল, কারণ ইউআরএল-এই আইডি আছে)
         body: JSON.stringify({ userId }),
@@ -145,7 +163,7 @@ export const setFeatured = async (lessonId) => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-          ... await getValidHeader()
+          ...(await getValidHeader()),
         },
       },
     );
@@ -169,7 +187,7 @@ export const adminDeleteLesson = async (lessonId) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          ... await getValidHeader()
+          ...(await getValidHeader()),
         },
       },
     );
@@ -191,7 +209,7 @@ export const handleReport = async (reportedData) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ... await getValidHeader()
+        ...(await getValidHeader()),
       },
       body: JSON.stringify(reportedData),
     });
@@ -222,7 +240,7 @@ export const adminHandleReports = async (reportedId) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          ... await getValidHeader()
+          ...(await getValidHeader()),
         },
       },
     );

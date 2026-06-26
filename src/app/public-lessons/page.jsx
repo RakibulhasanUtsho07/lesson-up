@@ -90,7 +90,7 @@ async function PublicLessonsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {publicLessons.map((lesson, ind) => (
               <div 
-                key={lesson._id || ind} 
+                key={ind} 
                 className="group transform hover:-translate-y-1 transition-all duration-300"
               >
                 

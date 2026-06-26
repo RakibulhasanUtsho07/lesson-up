@@ -24,6 +24,7 @@ export default function AppNavbar() {
     const user = session?.user
     const isLoggedIn = !!session;
     const userPlan = session?.user?.plan || "Free";
+    const userRole = user?.role
 
     const currentUser = user
     const handleLogout = async () => {
@@ -97,7 +98,7 @@ export default function AppNavbar() {
                             Public Lessons
                         </Link>
 
-                        {isLoggedIn && userPlan === "Free" && (
+                        {isLoggedIn && userPlan === "Free" && userRole !== "admin" && (
                             <Link href="/plan" className="text-sm font-semibold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent animate-pulse">
                                 Upgrade ⚡
                             </Link>
@@ -177,12 +178,12 @@ export default function AppNavbar() {
                     <Link href="/" className="text-base font-medium py-2 text-slate-200">Home</Link>
                     {isLoggedIn && (
                         <>
-                            <Link href="/dashboard/post-lesson" className="text-base font-medium py-2 text-slate-200">Add Lesson</Link>
+                            <Link href="/dashboard/post-lesson" className="text-base font-medium py-2 text-slate-200">Post Lesson</Link>
                             <Link href="/dashboard/my-lessons" className="text-base font-medium py-2 text-slate-200">My Lessons</Link>
                         </>
                     )}
                     <Link href="/public-lessons" className="text-base font-medium py-2 text-slate-200">Public Lessons</Link>
-                    {isLoggedIn && userPlan === "Free" && (
+                    {isLoggedIn && userPlan === "Free" && userRole !== "admin" (
                         <Link href="/pricing" className="text-base font-semibold text-warning py-2">Upgrade ⚡</Link>
                     )}
                     {!isLoggedIn && (
