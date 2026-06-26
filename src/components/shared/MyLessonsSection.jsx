@@ -17,6 +17,9 @@ import {
 } from "react-icons/fi";
 
 import { authClient } from "@/lib/auth-client";
+import UniqueSystemAlertDialog from "./AlearDialog";
+import { adminDeleteLesson } from "@/lib/action/action";
+import { useRouter } from "next/navigation"; 
 
 export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
   
@@ -67,11 +70,34 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
   };
 
 
-  const executeDelete = () => {
-    setLessons(prevLessons => prevLessons.filter(l => l._id !== lessonToDelete._id && l.id !== lessonToDelete.id));
-    setIsDeleteModalOpen(false);
-    setLessonToDelete(null);
-  };
+// যদি Next.js App Router ব্যবহার করেন
+
+const router = useRouter();
+
+const executeDelete = async (lessonId) => {
+  
+  try {
+    console.log(lessonId, "hhahhssamdfbsbshdfbjf")
+    // ১. ব্যাকএন্ডে ডিলিট রিকোয়েস্ট পাঠানো
+    const response = await adminDeleteLesson(lessonId);
+
+    if (response?.success) {
+      // ২. যদি Next.js Server Component ব্যবহার করেন, তবে পেজ রিফ্রেশ করে নতুন ডাটা আনা
+      router.refresh(); 
+      
+      // অথবা যদি ক্লায়েন্ট সাইডে কোনো ফেচ ফাংশন থাকে, সেটা কল করুন:
+      // await loadAllLessons(); 
+
+      // ৩. মোডাল বন্ধ করা
+      setIsDeleteModalOpen(false);
+      setLessonToDelete(null);
+    } else {
+      alert(response?.message || "Delete failed");
+    }
+  } catch (error) {
+    console.error("Error executing delete:", error);
+  }
+};
 
   if (isPending) {
     return (
@@ -219,12 +245,13 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
                           </Link>
 
                           <Tooltip content="Delete Permanently" className="bg-slate-900 text-slate-200 text-xs rounded-lg">
-                            <button 
+                            <UniqueSystemAlertDialog executeDelete={executeDelete} lesson={lesson}/>
+                            {/* <button 
                               onClick={() => triggerDeleteConfirm(lesson)}
                               className="p-2 bg-slate-950 border border-slate-900 text-slate-500 hover:text-rose-400 hover:border-rose-500/20 rounded-xl transition-all hover:scale-105"
                             >
                               <FiTrash2 className="size-4" />
-                            </button>
+                            </button> */}
                           </Tooltip>
                         </div>
                       </td>
@@ -246,33 +273,7 @@ export default function MyLessonsSection({ userLessons, userPlan = "Free" }) {
       </Card>
 
       {/* 🚨 মোডাল */}
-      {isDeleteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/60 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-2xl relative space-y-4">
-            <div>
-              <h3 className="text-lg font-black text-white">Permanently Delete Lesson?</h3>
-              <p className="text-xs text-slate-400 mt-2 leading-relaxed">
-                Are you sure you want to delete <span className="text-rose-400 font-bold">"{lessonToDelete?.title}"</span>? This action cannot be undone.
-              </p>
-            </div>
-            
-            <div className="flex items-center justify-end gap-3 pt-2">
-              <button 
-                onClick={() => setIsDeleteModalOpen(false)}
-                className="px-4 py-2 text-xs font-bold text-slate-400 hover:text-white bg-slate-950 border border-slate-900 hover:border-slate-800 rounded-xl transition-all"
-              >
-                Cancel
-              </button>
-              <button 
-                onClick={executeDelete}
-                className="px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-rose-600 to-red-500 rounded-xl shadow-lg shadow-rose-500/10 hover:brightness-110 active:scale-95 transition-all"
-              >
-                Confirm Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  
     </div>
   );
 }

@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { FiAlertTriangle, FiX, FiTrash2 } from "react-icons/fi";
 
-export default function UniqueSystemAlertDialog({ lesson, handleDelete }) {
+export default function UniqueSystemAlertDialog({ lesson, executeDelete, setLessonId }) {
+  console.log(lesson, "alertDialog")
+  console.log(executeDelete, "exeCuteDelete")
   const [isOpen, setIsOpen] = useState(false);
 
   // Close on Escape key
@@ -19,8 +21,12 @@ export default function UniqueSystemAlertDialog({ lesson, handleDelete }) {
     return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
-  const onConfirm = () => {
-    handleDelete(lesson?._id || lesson?.id);
+ const onConfirm = () => {
+    const id = lesson?._id || lesson?.id;
+    console.log(id,"executeDelete id")
+    if (id) {
+      executeDelete(id); // ⚡ ফিক্স ১: সরাসরি আইডি সহ ডিলিট ফাংশন কল করা হলো=
+    }
     setIsOpen(false);
   };
 

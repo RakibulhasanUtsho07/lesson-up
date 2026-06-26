@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { Card, Button, Tooltip } from "@heroui/react";
 import {
@@ -11,36 +11,90 @@ import {
     FiInfo
 } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { adminDeleteLesson, adminHandleReports } from "@/lib/action/action";
 
 export default function ReportedLessonsClient({ initialReportedLessons }) {
-    // ডাটাবেজ থেকে আসা রিয়েল ডাটা স্টেট
+    console.log(initialReportedLessons, "initialReportedLessons initialReportedLessons")
     const [reportedLessons, setReportedLessons] = useState(initialReportedLessons);
     const [selectedLesson, setSelectedLesson] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    console.log(selectedLesson, "selectedLesson")
 
     // 🗑️ Action 1: Delete Lesson (Permanently removes from platform)
-    const handleDeleteLesson = async (id) => {
+    // ফাইলের ওপরে এটি ইম্পোর্ট করুন
+
+    // কম্পোনেন্টের ভেতর রাউটার ইনিশিয়ালাইজ করুন:
+    const router = useRouter();
+
+    const handleDeleteLesson = async (selectedLesson) => {
+        console.log(selectedLesson, "i am not fu");
+        const lessonId = selectedLesson?.lessonId;
+        const reportedId = selectedLesson?.id || selectedLesson?._id;
+        console.log(lessonId, reportedId, "handle lesson id");
+
+        if (!lessonId) return;
+
         try {
-            // ⚡ MongoDB-র রিয়েল আইডি (_id) ফিল্টার আউট করবে
-            setReportedLessons(prev => prev.filter(lesson => lesson._id !== id));
-            toast.success("Content removed successfully from platform.");
-            if (selectedLesson?.lessonId === id || selectedLesson?._id === id) closeModal();
+            // ✅ Both run in parallel — faster
+            const [reportData, lessonData] = await Promise.all([
+                adminHandleReports(reportedId),
+                adminDeleteLesson(lessonId)
+            ]);
+
+            // ✅ Check both results
+            if (lessonData?.success || reportData?.success) {
+                toast.success("Content and all reports removed successfully. 🗑️");
+
+
+                if (typeof setReportedLessons === "function") {
+                    setReportedLessons(prev => prev.filter(lesson =>
+                        (lesson.lessonId !== lessonId) && (lesson._id !== reportedId)
+                    ));
+                }
+
+                closeModal();
+
+                // 🔄 Next.js Router Cache-কে ফোর্স রিফ্রেশ করবে যাতে ব্যাকগ্রাউন্ডে সার্ভার ডাটা আপডেট হয়
+                router.refresh();
+            } else {
+                toast.error(lessonData?.message || reportData?.message || "Failed to delete content.");
+            }
         } catch (error) {
-            toast.error("Failed to delete content.");
+            console.error("Frontend Delete Error:", error);
+            toast.error(error.message || "Something went wrong!");
         }
     };
-
     // ✅ Action 2: Ignore (Keeps the lesson live and clears all reports)
-    const handleIgnoreReports = async (id) => {
-        try {
-            setReportedLessons(prev => prev.filter(lesson => lesson._id !== id));
-            toast.success("Reports dismissed. Content is live.");
-            if (selectedLesson?.lessonId === id || selectedLesson?._id === id) closeModal();
-        } catch (error) {
-            toast.error("Failed to dismiss reports.");
-        }
-    };
+   const handleIgnoreReports = async (selectedLesson) => {
+    const reportedId = selectedLesson?.id || selectedLesson?._id;
+    if (!reportedId) return;
 
+    try {
+        const reportsData = await adminHandleReports(reportedId);
+        
+        if (reportsData?.success) {
+            toast.success("Reports dismissed successfully. ✅");
+            
+            // 🚀 ক্লায়েন্ট স্টেট থেকে ইনস্ট্যান্টলি এই রিপোর্টের রো-টি রিমুভ করে দেওয়া
+            if (typeof setReportedLessons === "function") {
+                setReportedLessons(prev => prev.filter(lesson => 
+                    lesson._id !== reportedId && lesson.id !== reportedId
+                ));
+            }
+            
+            closeModal();
+            
+            // 🔄 Next.js Router Cache-কে ফোর্স রিফ্রেশ করবে যাতে ব্যাকগ্রাউন্ডে সার্ভার ডাটা সিঙ্ক হয়
+            router.refresh();
+        } else {
+            toast.error(reportsData?.message || "Failed to dismiss reports.");
+        }
+
+    } catch (error) {
+        console.error("Frontend Ignore Error:", error);
+        toast.error(error.message || "Something went wrong!");
+    }
+};
     // মোডাল হ্যান্ডলার্স
     const openReportsModal = (lesson) => {
         setSelectedLesson(lesson);
@@ -122,7 +176,7 @@ export default function ReportedLessonsClient({ initialReportedLessons }) {
                                             {/* Permanent Delete Button */}
                                             <Tooltip content="Permanently Delete Lesson" className="bg-slate-950 text-xs text-rose-400 border border-rose-950">
                                                 <button
-                                                    onClick={() => handleDeleteLesson(lesson._id)}
+                                                    onClick={() => handleDeleteLesson(lesson?.lessonId)}
                                                     className="p-2.5 bg-rose-500/10 border border-rose-500/20 text-rose-400 hover:bg-rose-500/20 rounded-xl transition-all"
                                                 >
                                                     <FiTrash2 className="size-3.5" />
@@ -202,14 +256,14 @@ export default function ReportedLessonsClient({ initialReportedLessons }) {
                             <Button
                                 size="sm"
                                 variant="flat"
-                                onClick={() => handleIgnoreReports(selectedLesson._id)}
+                                onClick={() => handleIgnoreReports(selectedLesson)}
                                 className="bg-emerald-500/10 text-emerald-400 font-bold rounded-xl text-xs h-9 px-4"
                             >
                                 Ignore Report
                             </Button>
                             <Button
                                 size="sm"
-                                onClick={() => handleDeleteLesson(selectedLesson._id)}
+                                onClick={() => handleDeleteLesson(selectedLesson)}
                                 className="bg-gradient-to-r from-rose-600 to-red-500 text-white font-black rounded-xl text-xs h-9 px-4"
                             >
                                 Delete Content

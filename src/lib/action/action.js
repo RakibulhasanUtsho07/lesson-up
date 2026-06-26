@@ -1,11 +1,22 @@
 "use server";
 
+import { authHeader } from "../core/sarver";
+const getValidHeader = async () => {
+  const headers = await authHeader();
+  
+  if (!headers.authorization || headers.authorization.includes("undefined")) {
+    console.warn("⚠️ Warning: Authorization token is undefined in Server Action!");
+  }
+  return headers;
+};
+
 export const postLesson = async (formData) => {
   try {
     const res = await fetch("http://localhost:5000/lessons", {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        ... await getValidHeader()
       },
       body: JSON.stringify(formData),
     });
@@ -29,6 +40,7 @@ export const userPostedLessons = async (userId) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        ... await getValidHeader()
       },
       next: { revalidate: 0 },
     });
@@ -52,6 +64,7 @@ export const postLikedData = async (likedData) => {
     method: "POST",
     headers: {
       "content-type": "application/json",
+      ... await getValidHeader()
     },
     body: JSON.stringify(likedData),
   });
@@ -63,20 +76,13 @@ export const postSavedData = async (savedData) => {
     method: "POST",
     headers: {
       "content-type": "application/json",
+      ... await getValidHeader()
     },
     body: JSON.stringify(savedData),
   });
 };
 
-// export  const updateLessonData= async(id)=> {
-//   const res = await fetch(`http://localhost:5000/lessons/${id}`, {
-//   method: "PATCH",
-//   headers: {
-//     "Content-Type": "application/json",
-//   },
-//   body: JSON.stringify(updatedFormData),
-// });
-// }
+
 export const getLessonsCount = async () => {
   try {
     const res = await fetch(`http://localhost:5000/lessons/count`);
@@ -112,6 +118,7 @@ export const updateUserPlan = async (userId) => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          ... await getValidHeader()
         },
         // যদি বডিতেও আইডি পাঠাতে চান (অপশনাল, কারণ ইউআরএল-এই আইডি আছে)
         body: JSON.stringify({ userId }),
@@ -138,6 +145,7 @@ export const setFeatured = async (lessonId) => {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          ... await getValidHeader()
         },
       },
     );
@@ -161,6 +169,7 @@ export const adminDeleteLesson = async (lessonId) => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          ... await getValidHeader()
         },
       },
     );
@@ -169,7 +178,7 @@ export const adminDeleteLesson = async (lessonId) => {
       throw new Error(`Server responded with status: ${res.status}`);
     }
 
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     return data;
   } catch (error) {
     console.error("Error in adminDeleteLesson fetch:", error);
@@ -182,6 +191,7 @@ export const handleReport = async (reportedData) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        ... await getValidHeader()
       },
       body: JSON.stringify(reportedData),
     });
@@ -203,24 +213,30 @@ export const handleReport = async (reportedData) => {
 
 export const adminHandleReports = async (reportedId) => {
   try {
+    // if (!lessonId) throw new Error("Reported ID is required");
+    console.log(reportedId, "reported id");
+
     const res = await fetch(
       `http://localhost:5000/lessons/delete/report/${reportedId}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          ... await getValidHeader()
         },
       },
     );
+    const data = await res.json().catch(() => ({}));
     if (!res.ok) {
       throw new Error(
         data?.message || `Server responded with status: ${res.status}`,
       );
     }
-    const data = await res.json();
+    // ⚡ ফিক্স ১: প্রথমে রেসপন্স টেক্সট বা জেসন নিয়ে তারপর এরর থ্রো করতে হবে
+
     return data;
   } catch (error) {
-    console.error("Error in handleReport fetch:", error);
+    console.error("Error in adminHandleReports fetch:", error);
     throw error;
   }
 };

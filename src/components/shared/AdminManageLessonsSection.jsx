@@ -8,7 +8,8 @@ import {
   FiCheckCircle,
   FiEye,
   FiFlag,
-  FiStar
+  FiStar,
+  FiTrash2
 } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -22,6 +23,7 @@ export default function AdminManageLessonsSection({ allLessons }) {
   const [lessons, setLessons] = useState(allLessons);
   const [filter, setFilter] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
+   const [lessonId, setLessonId]= useState(null)
 
   // ⚡ সার্ভার থেকে নতুন ডাটা আসলে স্টেট আপডেট করার জন্য
   useEffect(() => {
@@ -56,28 +58,30 @@ export default function AdminManageLessonsSection({ allLessons }) {
       toast.error("Something went wrong!");
     }
   };
- // ওপরে নিশ্চিত করুন adminDeleteLesson ইমপোর্ট করা আছে
+ 
 
 const handleDelete = async (lessonId) => {
-  if (!lessonId) return;
+ 
 
  
-  // if (!confirm("Are you sure you want to delete this lesson permanently?")) return;
+  
   
   try {
     // ⚡ ফিক্স ৩: adminDeleteLesson এর ভেতর lessonId পাস করা হলো
+   console.log(lessonId, "sjbshdsfdhhdhhd")
     const data = await adminDeleteLesson(lessonId);
     
-    if (data?.success) {
-      toast.success("Lesson deleted successfully! 🗑️");
-      
-     
-      setLessons((prevLessons) => prevLessons.filter((l) => l._id !== lessonId));
-      
-      router.refresh(); // সার্ভার ডাটা সিঙ্ক করার জন্য
-    } else {
-      toast.error(data?.message || "Failed to delete content.");
-    }
+   if (data?.success) {
+        toast.success(`${data.message}! 🌟`);
+        setLessons((prevLessons) =>
+          prevLessons.map((lesson) =>
+            lesson._id === lessonId ? { ...lesson, isFeatured: data.isFeatured } : lesson
+          )
+        );
+        router.refresh();
+      } else {
+        toast.error(data?.message || "Failed to update.");
+      }
   } catch (error) {
     console.error("Frontend Error:", error);
     toast.error("Something went wrong!");
@@ -231,7 +235,7 @@ const handleDelete = async (lessonId) => {
 
                             <button
 
-                              onClick={() => handleApprove(lesson._id)}
+                              // onClick={() => handleApprove(lesson._id)}
 
                               className="p-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 hover:bg-emerald-500/20 rounded-xl transition-all"
 
@@ -245,7 +249,7 @@ const handleDelete = async (lessonId) => {
                         {/* পার্মানেন্ট ডিলিট বাটন */}
 
                         <Tooltip content="Force Delete Content" className="bg-slate-950 text-xs text-rose-400 border border-rose-950">
-                            <UniqueSystemAlertDialog handleDelete={handleDelete} lesson={lesson}/>
+                            <UniqueSystemAlertDialog executeDelete={handleDelete} setLessonId={setLessonId} lesson={lesson}/>
                           {/* <button
                             onClick={() => handleDelete(lesson._id)}
                             className="p-2 bg-slate-950 border border-slate-900 text-slate-500 hover:text-rose-400 hover:border-rose-500/20 rounded-xl transition-all"
