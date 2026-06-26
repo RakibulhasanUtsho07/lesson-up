@@ -139,3 +139,34 @@ export const getReportsCount = async () => {
     return 0; // ⚡ ফিক্স ২: এরর খেলে কাউন্ট হিসেবে ০ রিটার্ন করা নিরাপদ
   }
 };
+export const getTodayLessonsCount = async () => {
+  try {
+    const res = await fetch("http://localhost:5000/lessons/today/count", {
+      cache: "no-store", 
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server responded with status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data?.success ? data.count : 0;
+  } catch (error) {
+    console.error("Error in getTodayLessonsCount:", error);
+    return 0; // কোনো কারণে এরর হলে ব্যাকআপ হিসেবে ০ রিটার্ন করবে
+  }
+};
+export const getMonthlyLessonsCount = async () => {
+  try {
+    const res = await fetch("http://localhost:5000/lessons/monthly-count", {
+      cache: "no-store",
+    });
+    if (!res.ok) throw new Error("Failed to fetch monthly data");
+    
+    const resData = await res.json();
+    return resData?.success ? resData.data : [];
+  } catch (error) {
+    console.error("Error:", error);
+    return [];
+  }
+};

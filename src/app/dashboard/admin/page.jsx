@@ -1,7 +1,7 @@
 import AdminDashboardHomeSection from '@/components/shared/DashboardHome';
 import { getLessonsCount, getTotalUserCount } from '@/lib/action/action';
 import { getSessionData } from '@/lib/core/session';
-import { getReportsCount } from '@/lib/data/data';
+import { getMonthlyLessonsCount, getReportsCount, getTodayLessonsCount } from '@/lib/data/data';
 import { redirect } from 'next/navigation'; // 🎯 সঠিক ইম্পোর্ট পাথ
 
 import React from 'react';
@@ -17,7 +17,9 @@ const AdminDashboardHomePage = async () => {
   const lessonCountData = await getLessonsCount();
   const userCountData = await getTotalUserCount();
   const countReports = await getReportsCount()
-  
+  const todaysLessonCount = await getTodayLessonsCount()
+  const countMonthlyLessons = await getMonthlyLessonsCount()
+  console.log(countMonthlyLessons, "hi hello")
   
   const totalUser = userCountData?.totalUser || 0;
   const totalLessons = lessonCountData?.totalLessons || 0;
@@ -31,6 +33,8 @@ const AdminDashboardHomePage = async () => {
         totalLessonsCount={totalLessons}
         totalUserCount={totalUser}
         totalReports={ countReports}
+        todaysLessonCount={todaysLessonCount}
+        countMonthlyLessons={countMonthlyLessons}
       />
     </div>
   );
