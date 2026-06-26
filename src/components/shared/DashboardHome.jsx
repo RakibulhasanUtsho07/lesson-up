@@ -38,13 +38,13 @@ const topContributors = [
   { id: 3, name: "Utsho", email: "utsho@utsho.com", lessons: 35, avatar: "https://i.pravatar.cc/150?img=12" },
 ];
 
-export default function AdminDashboardHomeSection({totalLessonsCount, totalUserCount}) {
+export default function AdminDashboardHomeSection({totalLessonsCount, totalUserCount, totalReports}) {
   
   // 📈 স্ট্যাটস কার্ড কনফিগারেশন
   const statsSummary = [
     { title: "Total Users", value: totalUserCount, icon: FiUsers, color: "from-cyan-500/10 to-blue-500/5", text: "text-cyan-400", border: "border-cyan-500/20" },
     { title: "Total Public Lessons", value: totalLessonsCount, icon: FiBookOpen, color: "from-emerald-500/10 to-teal-500/5", text: "text-emerald-400", border: "border-emerald-500/20" },
-    { title: "Reported Lessons", value: "14", icon: FiAlertTriangle, color: "from-rose-500/10 to-red-500/5", text: "text-rose-400", border: "border-rose-500/20" },
+    { title: "Reported Lessons", value: totalReports, icon: FiAlertTriangle, color: "from-rose-500/10 to-red-500/5", text: "text-rose-400", border: "border-rose-500/20" },
     { title: "Today's New Lessons", value: "48", icon: FiActivity, color: "from-amber-500/10 to-orange-500/5", text: "text-amber-400", border: "border-amber-500/20" },
   ];
 

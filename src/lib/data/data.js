@@ -119,3 +119,23 @@ export const getReportedData = async () => {
     return [];
   }
 };
+export const getReportsCount = async () => {
+  try {
+    // ⚡ ফিক্স ১: ইউআরএল স্ট্রিং থেকে অতিরিক্ত কোটেশন এবং ডাবল স্ল্যাশ (//) মুছে ফেলা হলো
+    const res = await fetch("http://localhost:5000/lessons/reports/count", {
+      cache: "no-store", // Next.js ক্যাশিং এড়াতে এবং ইনস্ট্যান্ট লাইভ কাউন্ট পেতে
+    });
+
+    if (!res.ok) {
+      throw new Error(`Server responded with status: ${res.status}`);
+    }
+
+    const data = await res.json();
+    
+    // যদি ব্যাকএন্ডে অবজেক্ট ফিক্স করে থাকেন তবে data.count রিটার্ন হবে, অন্যথায় সেফটি ব্যাকআপ হিসেবে 0
+    return data?.success ? data.count : 0;
+  } catch (error) {
+    console.error("Error in getReportsCount:", error);
+    return 0; // ⚡ ফিক্স ২: এরর খেলে কাউন্ট হিসেবে ০ রিটার্ন করা নিরাপদ
+  }
+};

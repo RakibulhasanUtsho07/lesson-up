@@ -25,7 +25,7 @@ export default function UniqueSystemAlertDialog({ lesson, executeDelete, setLess
     const id = lesson?._id || lesson?.id;
     console.log(id,"executeDelete id")
     if (id) {
-      executeDelete(id); // ⚡ ফিক্স ১: সরাসরি আইডি সহ ডিলিট ফাংশন কল করা হলো=
+      executeDelete(id); 
     }
     setIsOpen(false);
   };

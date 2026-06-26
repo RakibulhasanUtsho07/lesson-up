@@ -10,11 +10,7 @@ const nextConfig = {
       },
     ],
   },
-//  matcher: [
-   
-//     '/((?!api|_next/static|_next/image|favicon.ico|public-lessons).*)',
-//   ],
- 
+
 };
 
 export default nextConfig;
