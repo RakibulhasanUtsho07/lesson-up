@@ -1,15 +1,15 @@
 import { authHeader } from "@/lib/core/sarver";
 const getValidHeader = async () => {
   const headers = await authHeader();
-  console.log(headers, "headers")
+
   
   if (!headers.authorization || headers.authorization.includes("undefined")) {
     console.warn("⚠️ Warning: Authorization token is undefined in Server Action!");
   }
   return headers;
 };
-export const getPublicLessons = async () => {
-  const res = await fetch("http://localhost:5000/lessons");
+export const getPublicLessons = async (queryString) => {
+  const res = await fetch(`http://localhost:5000/lessons?${queryString}`);
   const data = await res.json();
   return data;
 };
