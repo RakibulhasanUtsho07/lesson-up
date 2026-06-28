@@ -8,8 +8,8 @@ A premium, full-stack web application where users can create, store, and share m
 - **Backend API Server:** [https://lesson-up-sarver-one.vercel.app](https://lesson-up-sarver-one.vercel.app)
 
 ### 🔑 Admin Access (For Examiners/Recruiters)
-- **Admin Email:** `admin@lessonup.com` *(Replace with your actual admin email)*
-- **Admin Password:** `AdminPass123` *(Replace with your actual admin password)*
+- **Admin Email:** `admin@admin.com` *(Replace with your actual admin email)*
+- **Admin Password:** `Admin123` *(Replace with your actual admin password)*
 
 ---
 
@@ -59,8 +59,8 @@ Follow these steps to run the project locally on your machine.
 ### 1. Clone the Repositories
 ```bash
 # Clone the client-side repository
-git clone [https://github.com/YOUR_USERNAME/lesson-up-client.git](https://github.com/YOUR_USERNAME/lesson-up-client.git)
+git clone [https://github.com/YOUR_USERNAME/lesson-up-client.git](https://github.com/RakibulhasanUtsho07/lesson_up.git)
 cd lesson-up-client
 
 # Clone the server-side repository (in a separate folder)
-git clone [https://github.com/YOUR_USERNAME/lesson-up-server.git](https://github.com/YOUR_USERNAME/lesson-up-server.git)
+git clone [https://github.com/YOUR_USERNAME/lesson-up-server.git](https://github.com/RakibulhasanUtsho07/lesson_up_sarver_one.git)
