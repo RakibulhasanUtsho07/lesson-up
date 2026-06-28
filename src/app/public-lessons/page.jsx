@@ -53,7 +53,7 @@ async function PublicLessonsPage({ searchParams }) {
             </p>
           </div>
         ) : (
-          // ✅ user prop পাঠানো হচ্ছে, paginatedLessons client component এ handle হবে
+          
           <PaginationWithSummary publicLessons={publicLessons} user={user} />
         )}
       </div>
