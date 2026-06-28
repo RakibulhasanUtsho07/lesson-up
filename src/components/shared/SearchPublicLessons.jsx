@@ -10,7 +10,7 @@ function SearchPublicLessons({filters}) {
     const searchParams = useSearchParams();
 
     // ⚡ ফিক্স ২: URL-এ আগে থেকে 'searchQuery' থাকলে সেটা নিবে, নাহলে খালি স্ট্রিং ""
-    const [searchQuery, setSearchQuery] = useState(filters.search);
+    const [searchQuery, setSearchQuery] = useState(filters.search || "");
 
     useEffect(() => {
         const sp = new URLSearchParams(searchParams.toString());

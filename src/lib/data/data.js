@@ -26,19 +26,7 @@ export const getLessonDetails = async (id) => {
   const data = await res.json();
   return data;
 };
-// export const getLessonUpdate= async (id) => {
 
-//   const res = await fetch(`http://localhost:5000/lesson-update/${id}`, {
-//     cache: "no-store",
-//   });
-
-//   if (!res.ok) {
-//     throw new Error("Failed to fetch lesson details");
-//   }
-
-//   const data = await res.json();
-//   return data;
-// };
 export const getFavoriteLessons = async (userId) => {
   try {
     if (!userId) return [];
