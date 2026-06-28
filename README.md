@@ -1,36 +1,66 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🌟 Digital Life Lessons (LessonUp)
 
-## Getting Started
+A premium, full-stack web application where users can create, store, and share meaningful life lessons, personal growth insights, and wisdom gathered over time. Built with a modern glassmorphic UI design, robust authentication, and seamless payment integration.
 
-First, run the development server:
+## 🚀 Live Links & Credentials
 
+- **Live Deployment:** [https://lesson-up.vercel.app](https://lesson-up.vercel.app)
+- **Backend API Server:** [https://lesson-up-sarver-one.vercel.app](https://lesson-up-sarver-one.vercel.app)
+
+### 🔑 Admin Access (For Examiners/Recruiters)
+- **Admin Email:** `admin@lessonup.com` *(Replace with your actual admin email)*
+- **Admin Password:** `AdminPass123` *(Replace with your actual admin password)*
+
+---
+
+## 🛠️ Tech Stack & NPM Packages Used
+
+### Frontend (Client-Side)
+- **Framework:** Next.js 16 (App Router) with JavaScript
+- **Styling:** Tailwind CSS & HeroUI Component Library
+- **Icons:** React Icons (`react-icons`)
+- **State & Interactivity:** Framer Motion (for premium UI animations)
+- **Social Sharing:** `react-share` *(Optional Feature)*
+
+### Backend (Server-Side)
+- **Environment:** Node.js & Express.js
+- **Database:** MongoDB Atlas
+- **Authentication:** Better Auth (Secure Email/Password & Google OAuth)
+- **Payments:** Stripe API (Stripe Webhooks for automated membership upgrade)
+
+---
+
+## ✨ Key Features
+
+### 👤 User Capabilities
+- **Dual-Method Authentication:** Secure signup/login using Email/Password (with strict validation rules) or Google OAuth via Better Auth.
+- **Dynamic Dashboard:** A full-width interactive panel showcasing personal stats (Total lessons created, saved favorites, recent activity, and quick shortcuts).
+- **Smart Content Creation:** Create wisdom entries with Titles, Descriptions, Categories, Emotional Tones, and Images. 
+  - *Free Users:* Can create "Free" lessons.
+  - *Premium Users:* Can unlock the option to create exclusive "Premium" content.
+- **Interactive Feed:** Browse public wisdom, toggle Likes in real-time, save lessons to a "Favorites" directory, and report inappropriate content.
+
+### ⭐ Premium Perks & Stripe Integration
+- **Free vs Premium Comparison:** A clean, 8-row feature table explaining Lifetime access perks.
+- **One-time Lifetime Upgrade:** Integrated with Stripe Checkout (Test Mode) costing ৳1500. Automatic background role upgrade via Stripe Webhooks.
+- **Content Gating:** Premium lessons automatically apply a gorgeous **Glassmorphic Blur Overlay** with a customized orange gradient "Get Premium" CTA for standard users.
+
+### 👑 Admin Management
+- **Platform Analytics:** Overview counters displaying total users, public lessons, flagged reports, and active contributors.
+- **User Moderation:** Control user roles (Promote standard users to admins).
+- **Content Moderation:** Feature exceptional lessons on the main homepage carousel, or handle/ignore reported content through the dedicated complaints center.
+
+---
+
+## ⚙️ Local Installation & Setup Guide
+
+Follow these steps to run the project locally on your machine.
+
+### 1. Clone the Repositories
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+# Clone the client-side repository
+git clone [https://github.com/YOUR_USERNAME/lesson-up-client.git](https://github.com/YOUR_USERNAME/lesson-up-client.git)
+cd lesson-up-client
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Clone the server-side repository (in a separate folder)
+git clone [https://github.com/YOUR_USERNAME/lesson-up-server.git](https://github.com/YOUR_USERNAME/lesson-up-server.git)
