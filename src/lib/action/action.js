@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { authHeader } from "../core/sarver";
 const getValidHeader = async () => {
   const headers = await authHeader();
@@ -14,7 +15,7 @@ const getValidHeader = async () => {
 
 export const postLesson = async (formData) => {
   try {
-    const res = await fetch("http://localhost:5000/lessons", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons`, {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -23,17 +24,8 @@ export const postLesson = async (formData) => {
       body: JSON.stringify(formData),
     });
     if (res.ok) {
-      toast.success("Insight shared! Your lesson is now live. 🚀", {
-        style: {
-          background: "#0f172a", // slate-900
-          color: "#e2e8f0", // slate-200
-          border: "1px solid #1e293b", // slate-800
-        },
-        iconTheme: {
-          primary: "#06b6d4", // cyan-500
-          secondary: "#0f172a",
-        },
-      });
+     revalidatePath
+      
     }
   } catch (error) {}
 };
@@ -48,7 +40,7 @@ export const userPostedLessons = async (userId) => {
     }
 
     // 💡 Log this URL to see exactly what is being sent to your backend terminal
-    const targetUrl = `http://localhost:5000/lessons/user/${userId}`;
+    const targetUrl = `${process.env.NEXT_PUBLIC_BASE_URI}/lessons/user/${userId}`;
     console.log("🚀 Outgoing Fetch URL:", targetUrl);
 
     const res = await fetch(targetUrl, {
@@ -75,7 +67,7 @@ export const userPostedLessons = async (userId) => {
 
 export const postLikedData = async (likedData) => {
   console.log(likedData, "liked Data");
-  const res = await fetch("http://localhost:5000/likes", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/likes`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -87,7 +79,7 @@ export const postLikedData = async (likedData) => {
 
 export const postSavedData = async (savedData) => {
   console.log(savedData, "saved Data");
-  const res = await fetch("http://localhost:5000/savePosts", {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/savePosts`, {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -99,7 +91,7 @@ export const postSavedData = async (savedData) => {
 
 export const getLessonsCount = async () => {
   try {
-    const res = await fetch(`http://localhost:5000/lessons/count`,
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons/count`,
       {
         headers: await getValidHeader()
       }
@@ -116,11 +108,11 @@ export const getLessonsCount = async () => {
 };
 export const getTotalUserCount = async () => {
   try {
-    const res = await fetch(`http://localhost:5000/lesson-up/user/count`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lesson-up/user/count`);
     if (!res.ok) {
       throw new Error(`Server responded with status: ${res.status}`);
     }
-    const data = res.json();
+    const data = await res.json();
     return data;
   } catch (error) {
     console.error("Error in countUserLessons fetch:", error);
@@ -131,14 +123,14 @@ export const updateUserPlan = async (userId) => {
   try {
     // ⚡ এখানে স্পষ্ট করে method: 'PATCH' উল্লেখ করতে হবে
     const res = await fetch(
-      `http://localhost:5000/user/update-plan/${userId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URI}/user/update-plan/${userId}`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
           ...(await getValidHeader()),
         },
-        // যদি বডিতেও আইডি পাঠাতে চান (অপশনাল, কারণ ইউআরএল-এই আইডি আছে)
+       
         body: JSON.stringify({ userId }),
       },
     );
@@ -158,7 +150,7 @@ export const setFeatured = async (lessonId) => {
   console.log(lessonId, "hi lesson Id");
   try {
     const res = await fetch(
-      `http://localhost:5000/lesson/feature/${lessonId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URI}/lesson/feature/${lessonId}`,
       {
         method: "PATCH",
         headers: {
@@ -182,7 +174,7 @@ export const setFeatured = async (lessonId) => {
 export const adminDeleteLesson = async (lessonId) => {
   try {
     const res = await fetch(
-      `http://localhost:5000/lessons/delete/${lessonId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URI}/lessons/delete/${lessonId}`,
       {
         method: "DELETE",
         headers: {
@@ -205,7 +197,7 @@ export const adminDeleteLesson = async (lessonId) => {
 };
 export const handleReport = async (reportedData) => {
   try {
-    const res = await fetch(`http://localhost:5000/lessons/report`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons/report`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -231,11 +223,11 @@ export const handleReport = async (reportedData) => {
 
 export const adminHandleReports = async (reportedId) => {
   try {
-    // if (!lessonId) throw new Error("Reported ID is required");
+   
     console.log(reportedId, "reported id");
 
     const res = await fetch(
-      `http://localhost:5000/lessons/delete/report/${reportedId}`,
+      `${process.env.NEXT_PUBLIC_BASE_URI}/lessons/delete/report/${reportedId}`,
       {
         method: "DELETE",
         headers: {
@@ -250,7 +242,7 @@ export const adminHandleReports = async (reportedId) => {
         data?.message || `Server responded with status: ${res.status}`,
       );
     }
-    // ⚡ ফিক্স ১: প্রথমে রেসপন্স টেক্সট বা জেসন নিয়ে তারপর এরর থ্রো করতে হবে
+    
 
     return data;
   } catch (error) {

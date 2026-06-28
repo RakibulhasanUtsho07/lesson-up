@@ -1,6 +1,6 @@
 import React from 'react'
 
-function TopContributors({ topContributor = [] }) {
+function TopContributors({ topContributors = [] }) {
    
 
     const medals = [
@@ -9,7 +9,7 @@ function TopContributors({ topContributor = [] }) {
         { bg: "bg-orange-500/10 text-orange-400 border-orange-500/30", label: "🥉 Bronze" }
     ];
 
-    if (!topContributor?.length) {
+    if (!topContributors?.length) {
         return (
             <div className="w-full py-12 bg-slate-950 text-center">
                 <p className="text-slate-600 text-sm font-semibold">No contributors data available yet.</p>
@@ -35,7 +35,7 @@ function TopContributors({ topContributor = [] }) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {topContributor.slice(0, 4).map((user, index) => {
+                    {topContributors.slice(0, 4).map((user, index) => {
                         const medal = medals[index] || { bg: "bg-slate-800 text-slate-400 border-slate-700", label: `#${index + 1} Rank` };
 
                         return (
@@ -58,7 +58,7 @@ function TopContributors({ topContributor = [] }) {
                                                 className="w-14 h-14 rounded-full object-cover border border-slate-800 p-0.5 group-hover:scale-105 transition-transform duration-300"
                                             />
                                         ) : (
-                                            /* ⚡ ফিক্স: ইমেজ না থাকলে নামের প্রথম অক্ষরটি একটি সুন্দর রাউন্ডেড গ্লাস-ডিজাইন বক্সে দেখাবে */
+                                            
                                             <div className="w-14 h-14 rounded-full flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-800 text-cyan-400 font-bold text-lg shadow-inner group-hover:scale-105 transition-transform duration-300">
                                                 {user?.name ? user.name[0].toUpperCase() : "U"}
                                             </div>

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import HeroSlider from "@/components/Banner";
 import FeaturedLessons from "@/components/shared/FeaturedLessons";
 import MostFavoritesLessons from "@/components/shared/MostFavoritesLessons";
@@ -10,7 +11,7 @@ import Image from "next/image";
 export default async function Home() {
   const lessons = await getPublicLessons()
   const mostFavoritesLesson =await getMostSavedLessons()
-  const topContributor = await getTopContributors()
+  const topContributors = await getTopContributors()
    console.log(mostFavoritesLesson, "topContributor mostFavoritesLesson" )
   return (
     <>
@@ -20,7 +21,7 @@ export default async function Home() {
       <FeaturedLessons lessons={lessons}/>
       <WhyLearningMatters/>
       <MostFavoritesLessons mostFavoritesLesson={mostFavoritesLesson}/>
-      <TopContributors topContributor={topContributor} />
+      <TopContributors topContributors={topContributors} />
 
     </>
   );

@@ -9,12 +9,12 @@ const getValidHeader = async () => {
   return headers;
 };
 export const getPublicLessons = async (queryString) => {
-  const res = await fetch(`http://localhost:5000/lessons?${queryString}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons?${queryString}`);
   const data = await res.json();
   return data;
 };
 export const getLessonDetails = async (id) => {
-  const res = await fetch(`http://localhost:5000/lessons/${id}`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons/${id}`, {
     cache: "no-store",
     headers: await getValidHeader()
   });
@@ -31,13 +31,13 @@ export const getFavoriteLessons = async (userId) => {
   try {
     if (!userId) return [];
 
-    const res = await fetch(`http://localhost:5000/savePosts/${userId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/savePosts/${userId}`, {
       cache: "no-store",
       headers: await getValidHeader()
     });
 
     console.log(
-      `📡 API URL: http://localhost:5000/savePosts/${userId} | Status: ${res.status}`,
+      `📡 API URL:${process.env.NEXT_PUBLIC_BASE_URI}/savePosts/${userId} | Status: ${res.status}`,
     );
 
     if (!res.ok) {
@@ -54,7 +54,7 @@ export const getFavoriteLessons = async (userId) => {
 };
 export const countUserLessons = async (userId) => {
   try {
-    const res = await fetch(`http://localhost:5000/lessons/count/${userId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons/count/${userId}`, {
       cache: "no-store",
       headers: await getValidHeader()
     });
@@ -73,7 +73,7 @@ export const countUserLessons = async (userId) => {
 
 export const countUserFavoriteLessons = async (userId) => {
   try {
-    const res = await fetch(`http://localhost:5000/savePosts/count/${userId}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/savePosts/count/${userId}`, {
       cache: "no-store",
       headers: await getValidHeader()
     });
@@ -91,7 +91,7 @@ export const countUserFavoriteLessons = async (userId) => {
 };
 export const getUsers = async () => {
   try {
-    const res = await fetch(`http://localhost:5000/users`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/users`, {
       cache: "no-store",
       headers: await authHeader()
     });
@@ -109,7 +109,7 @@ export const getUsers = async () => {
 };
 export const getReportedData = async () => {
   try {
-    const res = await fetch("http://localhost:5000/lessons/report/get", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons/report/get`, {
       cache: "no-store",
       headers: await getValidHeader()
     });
@@ -125,11 +125,11 @@ export const getReportedData = async () => {
 };
 export const getReportsCount = async () => {
   try {
-    // ⚡ ফিক্স ১: ইউআরএল স্ট্রিং থেকে অতিরিক্ত কোটেশন এবং ডাবল স্ল্যাশ (//) মুছে ফেলা হলো
-    const res = await fetch("http://localhost:5000/lessons/reports/count", {
+   
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons/reports/count`, {
       cache: "no-store",
       headers: await getValidHeader()
-       // Next.js ক্যাশিং এড়াতে এবং ইনস্ট্যান্ট লাইভ কাউন্ট পেতে
+       
     });
 
     if (!res.ok) {
@@ -138,16 +138,16 @@ export const getReportsCount = async () => {
 
     const data = await res.json();
     
-    // যদি ব্যাকএন্ডে অবজেক্ট ফিক্স করে থাকেন তবে data.count রিটার্ন হবে, অন্যথায় সেফটি ব্যাকআপ হিসেবে 0
+    
     return data?.success ? data.count : 0;
   } catch (error) {
     console.error("Error in getReportsCount:", error);
-    return 0; // ⚡ ফিক্স ২: এরর খেলে কাউন্ট হিসেবে ০ রিটার্ন করা নিরাপদ
+    return 0; 
   }
 };
 export const getTodayLessonsCount = async () => {
   try {
-    const res = await fetch("http://localhost:5000/lessons/today/count", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons/today/count`, {
       cache: "no-store", 
       headers: await getValidHeader()
     });
@@ -160,12 +160,12 @@ export const getTodayLessonsCount = async () => {
     return data?.success ? data.count : 0;
   } catch (error) {
     console.error("Error in getTodayLessonsCount:", error);
-    return 0; // কোনো কারণে এরর হলে ব্যাকআপ হিসেবে ০ রিটার্ন করবে
+    return 0; 
   }
 };
 export const getMonthlyLessonsCount = async () => {
   try {
-    const res = await fetch("http://localhost:5000/lessons/monthly-count", {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons/monthly-count`, {
       cache: "no-store",
       headers: await getValidHeader()
     });
@@ -180,7 +180,7 @@ export const getMonthlyLessonsCount = async () => {
 };
 export const getTopContributors = async () => {
   try {
-    const res = await fetch("http://localhost:5000/users/top-contributors", { cache: "no-store" });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/users/top-contributors`, { cache: "no-store" });
     const data = await res.json();
     return data?.success ? data.data : [];
   } catch (error) {
@@ -191,7 +191,7 @@ export const getTopContributors = async () => {
 
 export const getMostSavedLessons = async () => {
   try {
-    const res = await fetch("http://localhost:5000/lessons/most-saved", { cache: "no-store" });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URI}/lessons/most-saved`, { cache: "no-store" });
     const data = await res.json();
     return data?.success ? data.data : [];
   } catch (error) {

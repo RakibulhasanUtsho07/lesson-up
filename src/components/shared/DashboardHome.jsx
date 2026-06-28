@@ -18,18 +18,16 @@ import {
   FiTrendingUp, FiShield, FiZap 
 } from "react-icons/fi";
 
-const topContributors = [
-  { id: 1, name: "Asif Rahman", email: "asif@wisdom.com", lessons: 42, avatar: "https://i.pravatar.cc/150?img=33" },
-  { id: 2, name: "Tamanna Islam", email: "tamanna@wisdom.com", lessons: 38, avatar: "https://i.pravatar.cc/150?img=47" },
-  { id: 3, name: "Utsho", email: "utsho@utsho.com", lessons: 35, avatar: "https://i.pravatar.cc/150?img=12" },
-];
+
 
 export default function AdminDashboardHomeSection({
   totalLessonsCount, 
   totalUserCount, 
   totalReports, 
   todaysLessonCount, 
-  countMonthlyLessons  // shape: [{ month: "Jun 2026", count: 9 }]
+  countMonthlyLessons ,
+  topContributors
+  
 }) {
 
   const statsSummary = [
@@ -40,7 +38,7 @@ export default function AdminDashboardHomeSection({
   ];
   const chartData = countMonthlyLessons?.map(item => ({
   ...item,
-  month: item.month?.split(" ")[0]  // "Jun 2026" → "Jun"
+  month: item.month?.split(" ")[0]  
 }));
 
   return (

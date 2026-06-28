@@ -4,7 +4,7 @@ import { FiAlertTriangle } from "react-icons/fi";
 import { getReportedData } from "@/lib/data/data";
 import ReportedLessonsClient from "@/components/shared/ReportedLessonClient";
 
-// 📝 ডামি গ্লোবাল রিপোর্টেড ডাটা (ভবিষ্যতে আপনি সার্ভার/মঙ্গোডিবি থেকে সরাসরি ফেচ করতে পারবেন)
+
 
 
 export default async function ReportedLessonsPage() {
